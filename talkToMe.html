@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Talk to Me</title>
+</head>
+<body>
+<label for="phrase">What should I say?</label>
+<input type="text" id="phrase">
+</body>
+<script>
+    let talk = document.getElementById('phrase');
+	talk.addEventListener("blur", talkToMe);
+
+	function talkToMe() {
+		let speech = new SpeechSynthesisUtterance();
+		speech.lang = "en-US";
+		speech.text = talk.value;
+		speech.volume = speech.rate = speech.pitch = 1;
+		window.speechSynthesis.speak(speech);
+    }
+</script>
+</html>
