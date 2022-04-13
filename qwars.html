@@ -237,12 +237,18 @@
 			for(let i = 0; i < 5; i++) {
 				move += match[i] + attempt[i];
 			}
-			fetch("https://3stehybb7a.execute-api.us-east-2.amazonaws.com/prod", {
+			fetch(_config.api.invokeUrl, {
 				method: 'POST',
-				body: JSON.stringify({ move: move })
-			})
-				// .then(() => getQuoteList())
-				.catch(err => console.log('Fetch Error :', err) );
+				headers: { Authorization: authToken },
+				data: JSON.stringify({ move: move }),
+				contentType: 'application/json',
+				success: result => completeRequest(result, pickupLocation),
+				error: function ajaxError(jqXHR, textStatus, errorThrown) {
+					console.error('Error requesting ride: ', textStatus, ', Details: ', errorThrown);
+					console.error('Response: ', jqXHR.responseText);
+					alert('An error occurred when requesting your unicorn:\n' + jqXHR.responseText);
+				}
+			});
 		}
 
 		function setup(words) {
