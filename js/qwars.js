@@ -95,15 +95,12 @@ var authToken;
         fetch(_config.api.invokeUrl, {
             method: 'POST',
             headers: { Authorization: authToken },
+            body: JSON.stringify({ move: move+'X' }),
             data: JSON.stringify({ move: move }),
             contentType: 'application/json',
-            success: result => completeRequest(result),
-            error: function ajaxError(jqXHR, textStatus, errorThrown) {
-                console.error('Error requesting ride: ', textStatus, ', Details: ', errorThrown);
-                console.error('Response: ', jqXHR.responseText);
-                alert('An error occurred when requesting your unicorn:\n' + jqXHR.responseText);
-            }
-        });
+        })
+            .then(() => completeRequest(result))
+            .catch(err => console.log('Fetch Error :', err) );
     }
 
     function completeRequest(result) {
