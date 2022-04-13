@@ -3,8 +3,9 @@
 var WildRydes = window.WildRydes || {};
 WildRydes.map = WildRydes.map || {};
 
+var authToken;
+
 (function rideScopeWrapper($) {
-    var authToken;
     WildRydes.authToken.then(function setAuthToken(token) {
         if (token) {
             authToken = token;
