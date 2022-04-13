@@ -58,64 +58,6 @@ WildRydes.map = WildRydes.map || {};
         });
     }
 
-    function getWeather(loc) {
-        let url = `https://api.openweathermap.org/data/2.5/onecall?lat=${loc.latitude}&lon=${loc.longitude}&exclude=minutely,hourly&appid=a099a51a6362902523bbf6495a0818aa`;
-        fetch(url)
-            .then(response => response.json())  //  wait for the response and convert it to JSON
-            .then(weather => {                  //  with the resulting JSON data do something
-
-                //  If the city was entered extract weather based on that API else use the LatLon API result format
-                let wx = latLonToWeather(weather);
-                let innerHTML = '';
-                let msg;
-                //  We have converted the Lon Lat API (onecall) and City API (forecast) requests to the same format
-                //  let's build a nice card for each day of the weather data
-                //  this is a GREAT opportunity to Reactify this code. But for now I will keep it simple
-                innerHTML += `<h4>Date: ${wx.daily[0].date}</h4>
-                        <h5>Temp: Low ${wx.daily[0].min}&deg; / High: ${wx.daily[0].max}&deg;</h5>
-                        <p>Forecast: <img src='http://openweathermap.org/img/wn/${wx.daily[0].icon}@2x.png' alt=""> ${wx.daily[0].description}</p>
-                        <p>Chance of rain at ${wx.daily[0].pop}%</p>
-                        <p>Wind at ${wx.daily[0].wind_speed} mph out of the ${wx.daily[0].windDirection}</p>
-                        <p>Sunrise: ${wx.daily[0].sunrise} / Sunset: ${wx.daily[0].sunset}</p>`;
-                displayUpdate(innerHTML);
-
-                msg =  `${niceDate(weather.current.dt, weather.timezone_offset)} 
-                        ${niceTime(weather.current.dt, weather.timezone_offset)}
-                        Temp is ${KtoF(weather.current.temp)} degrees,
-                        Wind at ${weather.current.wind_speed} miles per hour, out of the ${windDirection(weather.current.wind_deg, true)} ,
-                        Sunset will be at ${niceTime(weather.current.sunset, weather.timezone_offset)}`
-                console.log(msg);
-                let speech = new SpeechSynthesisUtterance();
-                speech.lang = "en-US";
-                speech.text = msg;
-                speech.volume = speech.rate = speech.pitch = 1;
-                window.speechSynthesis.speak(speech);
-            });
-    }
-
-    function latLonToWeather(data) {
-        let wx = {};
-        wx.daily = data.daily.map(d => ({
-            date:           niceDate(d.dt,data.timezone_offset),
-            min:            KtoF(d.temp.min),
-            max:            KtoF(d.temp.max),
-            sunrise:        niceTime(d.sunrise, data.timezone_offset),
-            sunset:         niceTime(d.sunset,  data.timezone_offset),
-            icon:           d.weather[0].icon,
-            description:    d.weather[0].description,
-            wind_speed:     d.wind_speed.toFixed(0),
-            windDirection:  windDirection(d.wind_deg, true),
-            pop:            (d.pop * 100).toFixed(0),
-            feels_like:     KtoF(d.feels_like.day),
-            dewPoint:       d.dew_point,
-            humidity:       d.humidity,
-        }));
-        wx.city = "";
-        wx.lat  = data.lat;
-        wx.lon  = data.lon;
-        return wx;
-    }
-
     // Register click handler for #request button
     $(function onDocReady() {
         $('#request').click(handleRequestClick);
@@ -145,73 +87,176 @@ WildRydes.map = WildRydes.map || {};
         requestUnicorn(pickupLocation);
     }
 
-    function animateArrival(callback) {
-        var dest = WildRydes.map.selectedPoint;
-        var origin = {};
-
-        if (dest.latitude > WildRydes.map.center.latitude) {
-            origin.latitude = WildRydes.map.extent.minLat;
-        } else {
-            origin.latitude = WildRydes.map.extent.maxLat;
-        }
-
-        if (dest.longitude > WildRydes.map.center.longitude) {
-            origin.longitude = WildRydes.map.extent.minLng;
-        } else {
-            origin.longitude = WildRydes.map.extent.maxLng;
-        }
-
-        WildRydes.map.animate(origin, dest, callback);
-    }
-
     function displayUpdate(text) {
         $('#updates').append($('<li>' + text + '</li>'));
     }
+
+    let fiveLetters, hiddenWord, unused = [], lock = [], close = [];
+    let match = ['_','_','_','_','_'];
+    lock = ['_','_','_','_','_'];
+
+    let result = document.getElementById('result');
+    let guess = document.getElementById('guess');
+    let foundYou = document.getElementById('foundYou');
+    let error = document.getElementById('error');
+    let tryThis = document.getElementById('tryThis');
+
+    window.addEventListener("load", function () {
+        // document.body.style.backgroundColor = getColorCode();
+
+        fetch('https://raw.githubusercontent.com/gtjames/csv/master/Dictionaries/five.txt')
+            .then(resp => resp.text())
+            .then(words => setup(words) )
+    });
+
+    document.getElementById('search').addEventListener('click', search);
+    document.getElementById('eliminate').addEventListener('click', eliminate);
+
+    function eliminate() {
+        let letter, attempt = '';
+        for (let i = 0; i < 5; i++) {
+            letter = document.getElementById(i+"").value;
+            if ( letter >= 'A' && letter <= 'Z') {
+                lock[i] = letter.toLowerCase();
+                match[i] = 'e';
+                setActive(letter.toLowerCase(), 'e');
+                attempt += letter;
+            }
+            if ( letter >= 'a' && letter <= 'z')    {
+                close.push(letter);
+                match[i] = 'c';
+                attempt += letter;
+                setActive(letter, 'c');
+            }
+            if (letter[0] === '!') {
+                attempt += letter.charAt(1);
+                setActive(letter.charAt(1), '_');
+                unused.push(letter.charAt(1));
+            }
+        }
+        findPossibles(attempt.toLowerCase(), unused, lock, match);
+
+        let td ='';
+        for (let h = 0; h < 5; h++) {
+            td += `<td class="${match[h]}">${attempt[h]}</td>`
+        }
+        create(match, attempt);
+        result.innerHTML += `<tr>${td}</tr>`;
+    }
+
+    function create(match, attempt) {
+        let move = '';
+        for(let i = 0; i < 5; i++) {
+            move += match[i] + attempt[i];
+        }
+        fetch(_config.api.invokeUrl, {
+            method: 'POST',
+            headers: { Authorization: authToken },
+            data: JSON.stringify({ move: move }),
+            contentType: 'application/json',
+            success: result => completeRequest(result, pickupLocation),
+            error: function ajaxError(jqXHR, textStatus, errorThrown) {
+                console.error('Error requesting ride: ', textStatus, ', Details: ', errorThrown);
+                console.error('Response: ', jqXHR.responseText);
+                alert('An error occurred when requesting your unicorn:\n' + jqXHR.responseText);
+            }
+        });
+    }
+
+    function setup(words) {
+        fiveLetters = words.split('\n');
+        hiddenWord = select();
+        foundYou.innerHTML = `${hiddenWord}<br>`;
+    }
+
+    function select() {
+        let index = Math.floor(Math.random() * fiveLetters.length);
+        return fiveLetters[index];
+    }
+
+    function search() {
+        let attempt = guess.value;
+        error.innerText = '';
+        if ( fiveLetters.find(w => w === attempt) !== attempt) {
+            error.innerText = `${attempt}: is not a valid word`;
+            return;
+        }
+
+        for (let g = 0; g < 5; g++) {
+            let found = false;
+            for (let h = 0; h < 5; h++) {
+                if (hiddenWord[h] === attempt[g]) {
+                    found = true;
+                    if (match[g] === 'e') break;
+                    match[g] = (h === g) ? 'e' : 'c';
+                    setActive(attempt[g], match[g]);
+                    if (match[g] === 'e') lock[g] = attempt[g];
+                    if (match[g] === 'c') close.push(attempt[g]);
+                }
+            }
+            if (!found) {
+                setActive(attempt[g], '_');
+                unused.push(attempt[g]);
+            }
+        }
+
+        findPossibles(attempt, unused, lock, match);
+
+        let td ='';
+        for (let h = 0; h < 5; h++) {
+            td += `<td class="${match[h]}">${attempt[h]}</td>`
+        }
+        result.innerHTML += `<tr>${td}</tr>`;
+        // document.body.style.backgroundColor = getColorCode();
+    }
+
+    function findPossibles(attempt, unused, lock, match) {
+        let possibles = fiveLetters;
+        //  eliminate all words that contain an unused letter
+        possibles = possibles.filter(w => {
+            for (let un of unused) {
+                if (w.indexOf(un) >= 0)
+                    return false;           //  contains an unused letter
+            }
+            return true;                    //  free of all unused letters
+        });
+
+        //  find the words that match position and letter
+        possibles = possibles.filter(w => {
+            for (let i = 0; i < 5; i++) {
+                if ((match[i] === 'e' && lock[i] !== w.charAt(i)))
+                    return false;           //  this word doesn't have a matching letter in a required position
+            }
+            return true;                    //  all required letters are accounted for
+        });
+
+        //  find words that have all of the possible letters
+        possibles = possibles.filter(w => {
+            for (let c of close) {
+                if (w.indexOf(c) === -1)
+                    return false;           //  does not contain a close letter
+            }
+            return true;                    //  contains all close letters
+        });
+
+        let text = '';
+        for (let w of possibles) {
+            text += `<li>${w}</li>`;
+        }
+        tryThis.innerHTML = text;
+        foundYou.innerHTML += `Possibles ${possibles.length}<br>`;
+    }
+
+    function setActive(letter, status) {
+        // use querySelectorAll to get all of the type li elements
+        const allTypes = document.querySelectorAll("div.row > button");
+        allTypes.forEach((item) => {
+            // check to see if this is the one to make active
+            if (item.dataset.key === letter) {
+                item.classList.add(status);
+            }
+        });
+    }
+
+
 }(jQuery));
-
-let message;
-
-//  convert degrees into english directions
-//  North is 11.25 degrees on both sides of 0/360 degrees.
-//  We add 11.25 to push all directions 11.25 degrees clockwise
-//  Then we mod the degrees with 360 to force all results between 0 and 359
-//  finally we can divide by 22.5 because we have 16 (360 / 16 equals 22.5) different wind directions
-function windDirection(degrees, long) {
-    let direction;
-    if (long)
-        direction =["North",  "North by North East", "North East",  "East by North East",
-            "East",    "East by South East", "South East", "South by South East",
-            "South",  "South by South West", "South West",  "West by South West",
-            "West",    "West by North West", "North West", "North by North West",
-            "North"];
-    else
-        direction = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW", "N"];
-
-    degrees = Math.round(degrees + 11.25) % 360;
-    let index = Math.floor(degrees / 22.5);
-    return direction[index];
-}
-
-//  strip out just the MM/DD/YYY from the date
-//  convert from UNIX date time and take the time zone offset into consideration
-function niceDate(date, offset) {
-    let day = new Date(date * 1000 + offset);
-    day = day.toLocaleString();
-    return day.substring(0, 10);
-}
-
-//  Strip out just the HH:MM:SS AM/PM from the date
-function niceTime(dateTime, offset) {
-    let day = new Date(dateTime * 1000 + offset).toLocaleString();
-    let hour = day.indexOf(' ') + 1;
-    let time = day.substring(hour);
-    time = time.substring(0, time.lastIndexOf(':')) + time.substring(time.length-3)
-    return time;
-}
-
-//  Convert Kelvin to Fahrenheit
-function KtoF(temp) {
-    temp -= 273;
-    temp = temp * 9 / 5 + 32;
-    return temp.toFixed(0);
-}
