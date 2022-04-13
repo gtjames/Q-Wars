@@ -99,7 +99,8 @@ var authToken;
             data: JSON.stringify({ move: move }),
             contentType: 'application/json',
         })
-            .then(() => completeRequest(result))
+            .then(resp => resp.json())
+            .then((result) => completeRequest(result))
             .catch(err => console.log('Fetch Error :', err) );
     }
 
