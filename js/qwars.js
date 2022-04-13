@@ -95,8 +95,7 @@ var authToken;
         fetch(_config.api.invokeUrl, {
             method: 'POST',
             headers: { Authorization: authToken },
-            body: JSON.stringify({ move: move+'A', userName: 'gtjames', gameKey: '3dhw4r7hda0' }),
-            data: JSON.stringify({ move: move+"Z", userName: 'TariJames', gameKey: 'SecretSquirrel' }),
+            body: JSON.stringify({ move: move, userName: 'gtjames', gameKey: '3dhw4r7hda0' }),
             contentType: 'application/json',
         })
             .then(resp => resp.json())
@@ -105,8 +104,8 @@ var authToken;
     }
 
     function completeRequest(result) {
-        console.log('Response received from API: ', result);
-        displayUpdate(`your move ${result}`);
+        console.log('Response received from API: ', JSON.stringify(result));
+        displayUpdate(`your move ${JSON.stringify(result)}`);
     }
 
     function setup(words) {
