@@ -1,8 +1,8 @@
 /*global WildRydes _config*/
 
-var WildRydes = window.WildRydes || {};
+let WildRydes = window.WildRydes || {};
 
-var authToken;
+let authToken;
 
 (function rideScopeWrapper($) {
     WildRydes.authToken.then(function setAuthToken(token) {
@@ -104,7 +104,7 @@ function createGame(userName, gameKey) {
 		body: JSON.stringify({ "userName" : userName, "gameKey" : gameKey,})
 	})
 		.then(resp => resp.json())
-		.then((data) => output(data))
+		.then((data) => console.log(data))
 		.catch(err => console.log('Fetch Error :', err) );
     }
 
