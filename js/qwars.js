@@ -37,8 +37,10 @@ var authToken;
     let fiveLetters, hiddenWord, unused = [], lock = [], close = [];
     let match = ['_','_','_','_','_'];
     lock = ['_','_','_','_','_'];
+let userName, gameKey;
 
-    let result = document.getElementById('result');
+let competition = document.getElementById('competition');
+let userAttempts = document.getElementById('userAttempts');
     let guess = document.getElementById('guess');
     let foundYou = document.getElementById('foundYou');
     let error = document.getElementById('error');
@@ -49,11 +51,17 @@ var authToken;
 
         fetch('https://raw.githubusercontent.com/gtjames/csv/master/Dictionaries/five.txt')
             .then(resp => resp.text())
-            .then(words => setup(words) )
+		.then(words => initializeGame(words) )
     });
 
-    document.getElementById('search').addEventListener('click', search);
+document.getElementById('newUser').addEventListener('click', newUser);
     document.getElementById('eliminate').addEventListener('click', eliminate);
+
+function newUser() {
+	userName = document.getElementById("userName").value;
+	gameKey = document.getElementById("gameKey").value;
+	createGame(userName, gameKey)
+}
 
     function eliminate() {
         let letter, attempt = '';
@@ -67,9 +75,9 @@ var authToken;
             }
             if ( letter >= 'a' && letter <= 'z')    {
                 close.push(letter);
-                match[i] = 'c';
+			if (match[i] !== 'c') match[i] = 'c';
                 attempt += letter;
-                setActive(letter, 'c');
+			setActive(letter, match[i]);
             }
             if (letter[0] === '!') {
                 attempt += letter.charAt(1);
@@ -78,24 +86,65 @@ var authToken;
             }
         }
         findPossibles(attempt.toLowerCase(), unused, lock, match);
+	userAttempts.innerHTML += postAttempt(match, attempt)
+	makeAMove(match, attempt);
+}
 
+function postAttempt(match, attempt) {
         let td ='';
         for (let h = 0; h < 5; h++) {
             td += `<td class="${match[h]}">${attempt[h]}</td>`
         }
-        create(match, attempt);
-        result.innerHTML += `<tr>${td}</tr>`;
+	return `<tr>${td}</tr>`;
+}
+
+function createGame(userName, gameKey) {
+	fetch("https://slcrbpag33.execute-api.us-west-1.amazonaws.com/prod", {
+		method: 'POST',
+		body: JSON.stringify({ "userName" : userName, "gameKey" : gameKey,})
+	})
+		.then(resp => resp.json())
+		.then((data) => output(data))
+		.catch(err => console.log('Fetch Error :', err) );
     }
 
-    function create(match, attempt) {
+let timerId= setInterval(()=>{ getOtherMoves() }, 5000);
+
+function getOtherMoves() {
+	fetch(`https://slcrbpag33.execute-api.us-west-1.amazonaws.com/prod/players`,
+		{
+			method: "POST",
+			body: JSON.stringify({"gameKey": gameKey})
+		})
+		.then(resp => resp.json())
+		.then(games => {
+			let allPlayers = games.filter(f => f.gameKey === gameKey);
+			competition.innerHTML = '';
+			allPlayers.forEach(player => {
+				let card = `<div class="w3-col m4 l3 disney-card w3-theme-d1">
+                                <table><legend>${player.userName}</legend>`;
+				player.moves.forEach(m => {
+					let match = m[0] + m[2] + m[4] + m[6] + m[8];
+					card += postAttempt(match, "_____");
+				})
+				competition.innerHTML += `${card}</div>`;
+			})
+		})
+		.catch(err => console.log('Fetch Error :', err) );
+}
+
+	function makeAMove(match, attempt) {
         let move = '';
         for(let i = 0; i < 5; i++) {
             move += match[i] + attempt[i];
         }
-        fetch(_config.api.invokeUrl, {
-            method: 'POST',
+
+		//       fetch("https://slcrbpag33.execute-api.us-west-1.amazonaws.com/prod", {
+    	fetch(_config.api.invokeUrl, {
+            method: 'POST',     //  or is it PUT
             headers: { Authorization: authToken },
-            body: JSON.stringify({ move: move, userName: 'gtjames', gameKey: '3dhw4r7hda0' }),
+            body: JSON.stringify({ move: move, userName: 'gtjames', gameKey: 'gameA' }),
+    //      body: JSON.stringify({ "userName" : userName, "gameKey" : gameKey, "move": move })
             contentType: 'application/json',
         })
             .then(resp => resp.json())
@@ -108,19 +157,21 @@ var authToken;
         displayUpdate(`your move ${JSON.stringify(result)}`);
     }
 
-    function setup(words) {
+function initializeGame(words) {
         fiveLetters = words.split('\n');
-        hiddenWord = select();
+	hiddenWord = selectRandomWord();
         foundYou.innerHTML = `${hiddenWord}<br>`;
     }
 
-    function select() {
+function selectRandomWord() {
         let index = Math.floor(Math.random() * fiveLetters.length);
         return fiveLetters[index];
     }
 
     function search() {
         let attempt = guess.value;
+	let match = ['_','_','_','_','_'];
+
         error.innerText = '';
         if ( fiveLetters.find(w => w === attempt) !== attempt) {
             error.innerText = `${attempt}: is not a valid word`;
@@ -151,11 +202,12 @@ var authToken;
         for (let h = 0; h < 5; h++) {
             td += `<td class="${match[h]}">${attempt[h]}</td>`
         }
-        result.innerHTML += `<tr>${td}</tr>`;
+	userAttempts.innerHTML += `<tr>${td}</tr>`;
         // document.body.style.backgroundColor = getColorCode();
     }
 
     function findPossibles(attempt, unused, lock, match) {
+
         let possibles = fiveLetters;
         //  eliminate all words that contain an unused letter
         possibles = possibles.filter(w => {

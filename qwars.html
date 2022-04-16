@@ -126,16 +126,23 @@
     <div id="main">
         <table>
             <tr>
-                <td><label for="guess">Take a Guess</label></td>
-                <td><input id="guess"></td>
+        <td><label for="userName">Who are you</label></td>
+        <td><input id="userName" value="gary"></td>
+        <td><input id="gameKey" value="gameA"></td>
             </tr>
             <tr>
-                <td><button id="search">Search</button></td>
+        <td><button id="newUser">Search</button></td>
             </tr>
         </table>
-        <table id="result">
 
+<div class="w3-col m4 l3 disney-card w3-theme-l1">
+    <table>
+        <legend>${userName}</legend>
+        <tbody id="userAttempts"></tbody>
         </table>
+</div>
+<div id="competition"></div>
+
         <h3 id="foundYou"></h3>
         <table>
             <tr>
