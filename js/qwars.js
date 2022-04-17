@@ -86,9 +86,9 @@ function newUser() {
             }
         }
         findPossibles(attempt.toLowerCase(), unused, lock, match);
-	userAttempts.innerHTML += postAttempt(match, attempt)
-	makeAMove(match, attempt);
-}
+		userAttempts.innerHTML += postAttempt(match, attempt)
+		makeAMove(match, attempt);
+	}
 
 function postAttempt(match, attempt) {
         let td ='';
@@ -111,6 +111,7 @@ function createGame(userName, gameKey) {
 let timerId= setInterval(()=>{ getOtherMoves() }, 5000);
 
 function getOtherMoves() {
+	debugger
 	fetch(`https://slcrbpag33.execute-api.us-west-1.amazonaws.com/prod/players`,
 		{
 			method: "POST",
@@ -138,6 +139,7 @@ function getOtherMoves() {
         for(let i = 0; i < 5; i++) {
             move += match[i] + attempt[i];
         }
+		debugger
 
 		//       fetch("https://slcrbpag33.execute-api.us-west-1.amazonaws.com/prod", {
     	fetch(_config.api.invokeUrl, {
