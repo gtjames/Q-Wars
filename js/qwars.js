@@ -1,261 +1,261 @@
 /*global WildRydes _config*/
 
-let WildRydes = window.WildRydes || {};
-
-let authToken;
-
 (function rideScopeWrapper($) {
-    WildRydes.authToken.then(function setAuthToken(token) {
-        if (token) {
-            authToken = token;
-        } else {
-            window.location.href = '/signin.html';
-        }
-    }).catch(function handleTokenError(error) {
-        alert(error);
-        window.location.href = '/signin.html';
-    });
+	let WildRydes = window.WildRydes || {};
 
-    // Register click handler for #request button
-    $(function onDocReady() {
-        WildRydes.authToken.then(function updateAuthMessage(token) {
-            if (token) {
-                displayUpdate('You are authenticated. Click to see your <a href="#authTokenModal" data-toggle="modal">auth token</a>.');
-                $('.authToken').text(token);
-            }
-        });
+	let authToken;
 
-        if (!_config.api.invokeUrl) {
-            $('#noApiMessage').show();
-        }
-    });
+	WildRydes.authToken.then(function setAuthToken(token) {
+		if (token) {
+			authToken = token;
+		} else {
+			window.location.href = '/signin.html';
+		}
+	}).catch(function handleTokenError(error) {
+		alert(error);
+		window.location.href = '/signin.html';
+	});
 
-    function displayUpdate(text) {
-        $('#updates').append($('<li>' + text + '</li>'));
-    }
+	// Register click handler for #request button
+	$(function onDocReady() {
+		WildRydes.authToken.then(function updateAuthMessage(token) {
+			if (token) {
+				displayUpdate('You are authenticated. Click to see your <a href="#authTokenModal" data-toggle="modal">auth token</a>.');
+				$('.authToken').text(token);
+			}
+		});
 
-    let fiveLetters, hiddenWord, unused = [], lock = [], close = [];
-    let match = ['_','_','_','_','_'];
-    lock = ['_','_','_','_','_'];
-let userName, gameKey;
+		if (!_config.api.invokeUrl) {
+			$('#noApiMessage').show();
+		}
+	});
 
-let competition = document.getElementById('competition');
-let userAttempts = document.getElementById('userAttempts');
-    let guess = document.getElementById('guess');
-    let foundYou = document.getElementById('foundYou');
-    let error = document.getElementById('error');
-    let tryThis = document.getElementById('tryThis');
+	function displayUpdate(text) {
+		$('#updates').append($('<li>' + text + '</li>'));
+	}
 
-    window.addEventListener("load", function () {
-        // document.body.style.backgroundColor = getColorCode();
+	let fiveLetters, hiddenWord, unused = [], lock = [], close = [];
+	let match = ['_','_','_','_','_'];
+	lock = ['_','_','_','_','_'];
+	let userName, gameKey;
 
-        fetch('https://raw.githubusercontent.com/gtjames/csv/master/Dictionaries/five.txt')
-            .then(resp => resp.text())
-		.then(words => initializeGame(words) )
-    });
+	let competition = document.getElementById('competition');
+	let userAttempts = document.getElementById('userAttempts');
+	let guess = document.getElementById('guess');
+	let foundYou = document.getElementById('foundYou');
+	let error = document.getElementById('error');
+	let tryThis = document.getElementById('tryThis');
 
-document.getElementById('newUser').addEventListener('click', newUser);
-    document.getElementById('eliminate').addEventListener('click', eliminate);
+	window.addEventListener("load", function () {
+		// document.body.style.backgroundColor = getColorCode();
 
-function newUser() {
-	userName = document.getElementById("userName").value;
-	gameKey = document.getElementById("gameKey").value;
-	createGame(userName, gameKey)
-}
+		fetch('https://raw.githubusercontent.com/gtjames/csv/master/Dictionaries/five.txt')
+			.then(resp => resp.text())
+			.then(words => initializeGame(words) )
+	});
 
-    function eliminate() {
-        let letter, attempt = '';
-        for (let i = 0; i < 5; i++) {
-            letter = document.getElementById(i+"").value;
-            if ( letter >= 'A' && letter <= 'Z') {
-                lock[i] = letter.toLowerCase();
-                match[i] = 'e';
-                setActive(letter.toLowerCase(), 'e');
-                attempt += letter;
-            }
-            if ( letter >= 'a' && letter <= 'z')    {
-                close.push(letter);
-			if (match[i] !== 'c') match[i] = 'c';
-                attempt += letter;
-			setActive(letter, match[i]);
-            }
-            if (letter[0] === '!') {
-                attempt += letter.charAt(1);
-                setActive(letter.charAt(1), '_');
-                unused.push(letter.charAt(1));
-            }
-        }
-        findPossibles(attempt.toLowerCase(), unused, lock, match);
+	document.getElementById('newUser').addEventListener('click', newUser);
+	document.getElementById('eliminate').addEventListener('click', eliminate);
+
+	function newUser() {
+		userName = document.getElementById("userName").value;
+		gameKey = document.getElementById("gameKey").value;
+		createGame(userName, gameKey)
+	}
+
+	function eliminate() {
+		let letter, attempt = '';
+		for (let i = 0; i < 5; i++) {
+			letter = document.getElementById(i+"").value;
+			if ( letter >= 'A' && letter <= 'Z') {
+				lock[i] = letter.toLowerCase();
+				match[i] = 'e';
+				setActive(letter.toLowerCase(), 'e');
+				attempt += letter;
+			}
+			if ( letter >= 'a' && letter <= 'z')    {
+				close.push(letter);
+				if (match[i] !== 'c') match[i] = 'c';
+				attempt += letter;
+				setActive(letter, match[i]);
+			}
+			if (letter[0] === '!') {
+				attempt += letter.charAt(1);
+				setActive(letter.charAt(1), '_');
+				unused.push(letter.charAt(1));
+			}
+		}
+		findPossibles(attempt.toLowerCase(), unused, lock, match);
 		userAttempts.innerHTML += postAttempt(match, attempt)
 		makeAMove(match, attempt);
 	}
 
-function postAttempt(match, attempt) {
-        let td ='';
-        for (let h = 0; h < 5; h++) {
-            td += `<td class="${match[h]}">${attempt[h]}</td>`
-        }
-	return `<tr>${td}</tr>`;
-}
+	function postAttempt(match, attempt) {
+		let td ='';
+		for (let h = 0; h < 5; h++) {
+			td += `<td class="${match[h]}">${attempt[h]}</td>`
+		}
+		return `<tr>${td}</tr>`;
+	}
 
-function createGame(userName, gameKey) {
-	fetch("https://slcrbpag33.execute-api.us-west-1.amazonaws.com/prod", {
-		method: 'POST',
-		body: JSON.stringify({ "userName" : userName, "gameKey" : gameKey,})
-	})
-		.then(resp => resp.json())
-		.then((data) => console.log(data))
-		.catch(err => console.log('Fetch Error :', err) );
-    }
-
-let timerId= setInterval(()=>{ getOtherMoves() }, 5000);
-
-function getOtherMoves() {
-	debugger
-	fetch(`https://slcrbpag33.execute-api.us-west-1.amazonaws.com/prod/players`,
-		{
-			method: "POST",
-			body: JSON.stringify({"gameKey": gameKey})
+	function createGame(userName, gameKey) {
+		fetch("https://slcrbpag33.execute-api.us-west-1.amazonaws.com/prod", {
+			method: 'POST',
+			body: JSON.stringify({ "userName" : userName, "gameKey" : gameKey,})
 		})
-		.then(resp => resp.json())
-		.then(games => {
-			let allPlayers = games.filter(f => f.gameKey === gameKey);
-			competition.innerHTML = '';
-			allPlayers.forEach(player => {
-				let card = `<div class="w3-col m4 l3 disney-card w3-theme-d1">
-                                <table><legend>${player.userName}</legend>`;
-				player.moves.forEach(m => {
-					let match = m[0] + m[2] + m[4] + m[6] + m[8];
-					card += postAttempt(match, "_____");
-				})
-				competition.innerHTML += `${card}</div>`;
+			.then(resp => resp.json())
+			.then((data) => console.log(data))
+			.catch(err => console.log('Fetch Error :', err) );
+	}
+
+	let timerId= setInterval(()=>{ getOtherMoves() }, 5000);
+
+	function getOtherMoves() {
+		debugger
+		fetch(`https://slcrbpag33.execute-api.us-west-1.amazonaws.com/prod/players`,
+			{
+				method: "POST",
+				body: JSON.stringify({"gameKey": gameKey})
 			})
-		})
-		.catch(err => console.log('Fetch Error :', err) );
-}
+			.then(resp => resp.json())
+			.then(games => {
+				let allPlayers = games.filter(f => f.gameKey === gameKey);
+				competition.innerHTML = '';
+				allPlayers.forEach(player => {
+					let card = `<div class="w3-col m4 l3 disney-card w3-theme-d1">
+                                <table><legend>${player.userName}</legend>`;
+					player.moves.forEach(m => {
+						let match = m[0] + m[2] + m[4] + m[6] + m[8];
+						card += postAttempt(match, "_____");
+					})
+					competition.innerHTML += `${card}</div>`;
+				})
+			})
+			.catch(err => console.log('Fetch Error :', err) );
+	}
 
 	function makeAMove(match, attempt) {
-        let move = '';
-        for(let i = 0; i < 5; i++) {
-            move += match[i] + attempt[i];
-        }
+		let move = '';
+		for(let i = 0; i < 5; i++) {
+			move += match[i] + attempt[i];
+		}
 		debugger
 
 		//       fetch("https://slcrbpag33.execute-api.us-west-1.amazonaws.com/prod", {
-    	fetch(_config.api.invokeUrl, {
-            method: 'POST',     //  or is it PUT
-            headers: { Authorization: authToken },
-            body: JSON.stringify({ move: move, userName: 'gtjames', gameKey: 'gameA' }),
-    //      body: JSON.stringify({ "userName" : userName, "gameKey" : gameKey, "move": move })
-            contentType: 'application/json',
-        })
-            .then(resp => resp.json())
-            .then((result) => completeRequest(result))
-            .catch(err => console.log('Fetch Error :', err) );
-    }
+		fetch(_config.api.invokeUrl, {
+			method: 'POST',     //  or is it PUT
+			headers: { Authorization: authToken },
+			body: JSON.stringify({ move: move, userName: 'gtjames', gameKey: 'gameA' }),
+			//      body: JSON.stringify({ "userName" : userName, "gameKey" : gameKey, "move": move })
+			contentType: 'application/json',
+		})
+			.then(resp => resp.json())
+			.then((result) => completeRequest(result))
+			.catch(err => console.log('Fetch Error :', err) );
+	}
 
-    function completeRequest(result) {
-        console.log('Response received from API: ', JSON.stringify(result));
-        displayUpdate(`your move ${JSON.stringify(result)}`);
-    }
+	function completeRequest(result) {
+		console.log('Response received from API: ', JSON.stringify(result));
+		displayUpdate(`your move ${JSON.stringify(result)}`);
+	}
 
-function initializeGame(words) {
-        fiveLetters = words.split('\n');
-	hiddenWord = selectRandomWord();
-        foundYou.innerHTML = `${hiddenWord}<br>`;
-    }
+	function initializeGame(words) {
+		fiveLetters = words.split('\n');
+		hiddenWord = selectRandomWord();
+		foundYou.innerHTML = `${hiddenWord}<br>`;
+	}
 
-function selectRandomWord() {
-        let index = Math.floor(Math.random() * fiveLetters.length);
-        return fiveLetters[index];
-    }
+	function selectRandomWord() {
+		let index = Math.floor(Math.random() * fiveLetters.length);
+		return fiveLetters[index];
+	}
 
-    function search() {
-        let attempt = guess.value;
-	let match = ['_','_','_','_','_'];
+	function search() {
+		let attempt = guess.value;
+		let match = ['_','_','_','_','_'];
 
-        error.innerText = '';
-        if ( fiveLetters.find(w => w === attempt) !== attempt) {
-            error.innerText = `${attempt}: is not a valid word`;
-            return;
-        }
+		error.innerText = '';
+		if ( fiveLetters.find(w => w === attempt) !== attempt) {
+			error.innerText = `${attempt}: is not a valid word`;
+			return;
+		}
 
-        for (let g = 0; g < 5; g++) {
-            let found = false;
-            for (let h = 0; h < 5; h++) {
-                if (hiddenWord[h] === attempt[g]) {
-                    found = true;
-                    if (match[g] === 'e') break;
-                    match[g] = (h === g) ? 'e' : 'c';
-                    setActive(attempt[g], match[g]);
-                    if (match[g] === 'e') lock[g] = attempt[g];
-                    if (match[g] === 'c') close.push(attempt[g]);
-                }
-            }
-            if (!found) {
-                setActive(attempt[g], '_');
-                unused.push(attempt[g]);
-            }
-        }
+		for (let g = 0; g < 5; g++) {
+			let found = false;
+			for (let h = 0; h < 5; h++) {
+				if (hiddenWord[h] === attempt[g]) {
+					found = true;
+					if (match[g] === 'e') break;
+					match[g] = (h === g) ? 'e' : 'c';
+					setActive(attempt[g], match[g]);
+					if (match[g] === 'e') lock[g] = attempt[g];
+					if (match[g] === 'c') close.push(attempt[g]);
+				}
+			}
+			if (!found) {
+				setActive(attempt[g], '_');
+				unused.push(attempt[g]);
+			}
+		}
 
-        findPossibles(attempt, unused, lock, match);
+		findPossibles(attempt, unused, lock, match);
 
-        let td ='';
-        for (let h = 0; h < 5; h++) {
-            td += `<td class="${match[h]}">${attempt[h]}</td>`
-        }
-	userAttempts.innerHTML += `<tr>${td}</tr>`;
-        // document.body.style.backgroundColor = getColorCode();
-    }
+		let td ='';
+		for (let h = 0; h < 5; h++) {
+			td += `<td class="${match[h]}">${attempt[h]}</td>`
+		}
+		userAttempts.innerHTML += `<tr>${td}</tr>`;
+		// document.body.style.backgroundColor = getColorCode();
+	}
 
-    function findPossibles(attempt, unused, lock, match) {
+	function findPossibles(attempt, unused, lock, match) {
 
-        let possibles = fiveLetters;
-        //  eliminate all words that contain an unused letter
-        possibles = possibles.filter(w => {
-            for (let un of unused) {
-                if (w.indexOf(un) >= 0)
-                    return false;           //  contains an unused letter
-            }
-            return true;                    //  free of all unused letters
-        });
+		let possibles = fiveLetters;
+		//  eliminate all words that contain an unused letter
+		possibles = possibles.filter(w => {
+			for (let un of unused) {
+				if (w.indexOf(un) >= 0)
+					return false;           //  contains an unused letter
+			}
+			return true;                    //  free of all unused letters
+		});
 
-        //  find the words that match position and letter
-        possibles = possibles.filter(w => {
-            for (let i = 0; i < 5; i++) {
-                if ((match[i] === 'e' && lock[i] !== w.charAt(i)))
-                    return false;           //  this word doesn't have a matching letter in a required position
-            }
-            return true;                    //  all required letters are accounted for
-        });
+		//  find the words that match position and letter
+		possibles = possibles.filter(w => {
+			for (let i = 0; i < 5; i++) {
+				if ((match[i] === 'e' && lock[i] !== w.charAt(i)))
+					return false;           //  this word doesn't have a matching letter in a required position
+			}
+			return true;                    //  all required letters are accounted for
+		});
 
-        //  find words that have all of the possible letters
-        possibles = possibles.filter(w => {
-            for (let c of close) {
-                if (w.indexOf(c) === -1)
-                    return false;           //  does not contain a close letter
-            }
-            return true;                    //  contains all close letters
-        });
+		//  find words that have all of the possible letters
+		possibles = possibles.filter(w => {
+			for (let c of close) {
+				if (w.indexOf(c) === -1)
+					return false;           //  does not contain a close letter
+			}
+			return true;                    //  contains all close letters
+		});
 
-        let text = '';
-        for (let w of possibles) {
-            text += `<li>${w}</li>`;
-        }
-        tryThis.innerHTML = text;
-        foundYou.innerHTML += `Possibles ${possibles.length}<br>`;
-    }
+		let text = '';
+		for (let w of possibles) {
+			text += `<li>${w}</li>`;
+		}
+		tryThis.innerHTML = text;
+		foundYou.innerHTML += `Possibles ${possibles.length}<br>`;
+	}
 
-    function setActive(letter, status) {
-        // use querySelectorAll to get all of the type li elements
-        const allTypes = document.querySelectorAll("div.row > button");
-        allTypes.forEach((item) => {
-            // check to see if this is the one to make active
-            if (item.dataset.key === letter) {
-                item.classList.add(status);
-            }
-        });
-    }
+	function setActive(letter, status) {
+		// use querySelectorAll to get all of the type li elements
+		const allTypes = document.querySelectorAll("div.row > button");
+		allTypes.forEach((item) => {
+			// check to see if this is the one to make active
+			if (item.dataset.key === letter) {
+				item.classList.add(status);
+			}
+		});
+	}
 
 
 }(jQuery));
