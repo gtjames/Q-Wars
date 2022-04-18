@@ -145,8 +145,7 @@
 		fetch(_config.api.invokeUrl, {
 			method: 'POST',     //  or is it PUT
 			headers: { Authorization: authToken },
-			body: JSON.stringify({ move: move, userName: 'gtjames', gameKey: 'gameA' }),
-			//      body: JSON.stringify({ "userName" : userName, "gameKey" : gameKey, "move": move })
+			body: JSON.stringify({ userName : userName, gameKey: gameKey, move: move })
 			contentType: 'application/json',
 		})
 			.then(resp => resp.json())
