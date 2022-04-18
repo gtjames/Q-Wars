@@ -121,6 +121,7 @@ var WildRydes = window.WildRydes || {};
         signin(email, password,
             function signinSuccess() {
                 console.log('Successfully Logged In');
+                localStorage.setItem("userName", email);
                 window.location.href = 'qwars.html';
             },
             function signinError(err) {

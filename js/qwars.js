@@ -34,10 +34,11 @@
 		$('#updates').append($('<li>' + text + '</li>'));
 	}
 
-	let fiveLetters, hiddenWord, unused = [], lock = [], close = [];
+	let fiveLetters, hiddenWord, unused = [], close = [];
 	let match = ['_','_','_','_','_'];
-	lock = ['_','_','_','_','_'];
-	let userName, gameKey;
+	let lock  = ['_','_','_','_','_'];
+	let userName = localStorage.getItem("userName");
+	let gameKey;
 
 	let competition = document.getElementById('competition');
 	let userAttempts = document.getElementById('userAttempts');
@@ -118,7 +119,7 @@
 			})
 			.then(resp => resp.json())
 			.then(games => {
-				let allPlayers = games.filter(f => f.gameKey === gameKey);
+				let allPlayers = games.filter(f => f.gameKey === gameKey && f.userName !== userName);
 				competition.innerHTML = '';
 				allPlayers.forEach(player => {
 					let card =
