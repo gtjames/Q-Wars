@@ -82,120 +82,120 @@
 
 <body>
 
-    <div class="info panel panel-default">
+<div class="info panel panel-default">
+    <div class="panel-heading">
+        <button id="request" class="btn btn-primary" disabled="disabled">Set pickup</button>
+        <div class="dropdown pull-right">
+            <button id="accountLink" class="btn" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Account <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="accountLink">
+                <li><a id="signOut" href="#">Sign out</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="panel-body">
+        <ol id="updates">
+            <li>Welcome! Click the map to set your pickup location.</li>
+        </ol>
+    </div>
+</div>
+
+<div id="noApiMessage" class="configMessage" style="display: none;">
+    <div class="backdrop"></div>
+    <div class="panel panel-default">
         <div class="panel-heading">
-            <button id="request" class="btn btn-primary" disabled="disabled">Set pickup</button>
-            <div class="dropdown pull-right">
-                <button id="accountLink" class="btn" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Account <span class="caret"></span>
-                </button>
-                <ul class="dropdown-menu" aria-labelledby="accountLink">
-                    <li><a id="signOut" href="#">Sign out</a></li>
-                </ul>
-            </div>
+            <h3 class="panel-title">Successfully Authenticated!</h3>
         </div>
         <div class="panel-body">
-            <ol id="updates">
-                <li>Welcome! Click the map to set your pickup location.</li>
-            </ol>
+            <p>This page is not functional yet because there is no API invoke URL configured in <a href="/js/config.js">/js/config.js</a>. You'll configure this in Module 3.</p>
+            <p>In the meantime, if you'd like to test the Amazon Cognito user pool authorizer for your API, use the auth token below:</p>
+            <textarea class="authToken"></textarea>
         </div>
     </div>
+</div>
 
-    <div id="noApiMessage" class="configMessage" style="display: none;">
-        <div class="backdrop"></div>
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h3 class="panel-title">Successfully Authenticated!</h3>
+<div id="noCognitoMessage" class="configMessage" style="display: none;">
+    <div class="backdrop"></div>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">No Cognito User Pool Configured</h3>
+        </div>
+        <div class="panel-body">
+            <p>There is no user pool configured in <a href="/js/config.js">/js/config.js</a>. You'll configure this in Module 2 of the workshop.</p>
+        </div>
+    </div>
+</div>
+
+<div id="main">
+    <table>
+        <tr>
+            <td><label for="userName">Who are you</label></td>
+            <td><input id="userName" value="gary"></td>
+            <td><input id="gameKey" value="gameA"></td>
+        </tr>
+        <tr>
+            <td><button id="newUser">Search</button></td>
+        </tr>
+    </table>
+
+    <div class="w3-col m4 l3 disney-card w3-theme-l1">
+        <h4>${userName}</h4>
+        <table>
+            <tbody id="userAttempts"></tbody>
+        </table>
+    </div>
+    <div id="competition"></div>
+    <br>
+    <h3 id="foundYou"></h3>
+    <table>
+        <tr>
+            <td><input id="0" class="oneLetter" type="text"></td>
+            <td><input id="1" class="oneLetter" type="text"></td>
+            <td><input id="2" class="oneLetter" type="text"></td>
+            <td><input id="3" class="oneLetter" type="text"></td>
+            <td><input id="4" class="oneLetter" type="text"></td>
+        </tr>
+        <tr>
+            <td colspan="5">
+                <button id="eliminate">Search</button>
+            </td>
+        </tr>
+    </table>
+
+    <p id="error"></p>
+    <div id="keyboard">
+        <div class="row"><button data-key="q">q</button><button data-key="w">w</button><button data-key="e">e</button><button data-key="r">r</button><button data-key="t">t</button><button data-key="y">y</button><button data-key="u">u</button><button data-key="i">i</button><button data-key="o">o</button><button data-key="p">p</button></div>
+        <div class="row"><div class="spacer half"></div><button data-key="a">a</button><button data-key="s">s</button><button data-key="d">d</button><button data-key="f">f</button><button data-key="g">g</button><button data-key="h">h</button><button data-key="j">j</button><button data-key="k">k</button><button data-key="l">l</button><div class="spacer half"></div></div>
+        <div class="row"><div class="one-and-a-half"></div><button data-key="z">z</button><button data-key="x">x</button><button data-key="c">c</button><button data-key="v">v</button><button data-key="b">b</button><button data-key="n">n</button><button data-key="m">m</button><div class="one-and-a-half"></div></div>
+    </div>
+    <ul id="tryThis"></ul>    </div>
+
+<div id="authTokenModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="authToken">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Your Auth Token</h4>
             </div>
-            <div class="panel-body">
-                <p>This page is not functional yet because there is no API invoke URL configured in <a href="/js/config.js">/js/config.js</a>. You'll configure this in Module 3.</p>
-                <p>In the meantime, if you'd like to test the Amazon Cognito user pool authorizer for your API, use the auth token below:</p>
+            <div class="modal-body">
                 <textarea class="authToken"></textarea>
             </div>
-        </div>
-    </div>
-
-    <div id="noCognitoMessage" class="configMessage" style="display: none;">
-        <div class="backdrop"></div>
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h3 class="panel-title">No Cognito User Pool Configured</h3>
-            </div>
-            <div class="panel-body">
-                <p>There is no user pool configured in <a href="/js/config.js">/js/config.js</a>. You'll configure this in Module 2 of the workshop.</p>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
-
-    <div id="main">
-        <table>
-            <tr>
-        <td><label for="userName">Who are you</label></td>
-        <td><input id="userName" value="gary"></td>
-        <td><input id="gameKey" value="gameA"></td>
-            </tr>
-            <tr>
-        <td><button id="newUser">Search</button></td>
-            </tr>
-        </table>
-
-<div class="w3-col m4 l3 disney-card w3-theme-l1">
-    <h4>${userName}</h4>
-    <table>
-        <tbody id="userAttempts"></tbody>
-    </table>
 </div>
-<div id="competition"></div>
 
-        <h3 id="foundYou"></h3>
-        <table>
-            <tr>
-                <td><input id="0" class="oneLetter" type="text"></td>
-                <td><input id="1" class="oneLetter" type="text"></td>
-                <td><input id="2" class="oneLetter" type="text"></td>
-                <td><input id="3" class="oneLetter" type="text"></td>
-                <td><input id="4" class="oneLetter" type="text"></td>
-            </tr>
-            <tr>
-                <td colspan="5">
-                    <button id="eliminate">Search</button>
-                </td>
-            </tr>
-        </table>
-
-        <p id="error"></p>
-        <div id="keyboard">
-            <div class="row"><button data-key="q">q</button><button data-key="w">w</button><button data-key="e">e</button><button data-key="r">r</button><button data-key="t">t</button><button data-key="y">y</button><button data-key="u">u</button><button data-key="i">i</button><button data-key="o">o</button><button data-key="p">p</button></div>
-            <div class="row"><div class="spacer half"></div><button data-key="a">a</button><button data-key="s">s</button><button data-key="d">d</button><button data-key="f">f</button><button data-key="g">g</button><button data-key="h">h</button><button data-key="j">j</button><button data-key="k">k</button><button data-key="l">l</button><div class="spacer half"></div></div>
-            <div class="row"><div class="one-and-a-half"></div><button data-key="z">z</button><button data-key="x">x</button><button data-key="c">c</button><button data-key="v">v</button><button data-key="b">b</button><button data-key="n">n</button><button data-key="m">m</button><div class="one-and-a-half"></div></div>
-        </div>
-        <ul id="tryThis"></ul>    </div>
-
-    <div id="authTokenModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="authToken">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="myModalLabel">Your Auth Token</h4>
-                </div>
-                <div class="modal-body">
-                    <textarea class="authToken"></textarea>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script src="js/vendor/jquery-3.1.0.js"></script>
-    <script src="js/vendor/bootstrap.min.js"></script>
-    <script src="js/vendor/aws-cognito-sdk.min.js"></script>
-    <script src="js/vendor/amazon-cognito-identity.min.js"></script>
-    <script src="https://js.arcgis.com/4.3/"></script>
-    <script src="js/config.js"></script>
-    <script src="js/cognito-auth.js"></script>
-    <script src="js/qwars.js"></script>
+<script src="js/vendor/jquery-3.1.0.js"></script>
+<script src="js/vendor/bootstrap.min.js"></script>
+<script src="js/vendor/aws-cognito-sdk.min.js"></script>
+<script src="js/vendor/amazon-cognito-identity.min.js"></script>
+<script src="https://js.arcgis.com/4.3/"></script>
+<script src="js/config.js"></script>
+<script src="js/cognito-auth.js"></script>
+<script src="js/qwars.js"></script>
 </body>
 
 </html>
