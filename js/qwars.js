@@ -122,13 +122,15 @@
 				let allPlayers = games.filter(f => f.gameKey === gameKey);
 				competition.innerHTML = '';
 				allPlayers.forEach(player => {
-					let card = `<div class="w3-col m4 l3 disney-card w3-theme-d1">
-                                <table><legend>${player.userName}</legend>`;
+					let card =
+						`<div class="w3-col m4 l3 disney-card w3-theme-d1">
+							<h4>${player.userName}</h4>
+							<table>`;
 					player.moves.forEach(m => {
 						let match = m[0] + m[2] + m[4] + m[6] + m[8];
 						card += postAttempt(match, "_____");
 					})
-					competition.innerHTML += `${card}</div>`;
+					competition.innerHTML += `${card}</table></div>`;
 				})
 			})
 			.catch(err => console.log('Fetch Error :', err) );
