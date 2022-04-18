@@ -111,7 +111,6 @@
 	let timerId= setInterval(()=>{ getOtherMoves() }, 5000);
 
 	function getOtherMoves() {
-		debugger
 		fetch(`https://slcrbpag33.execute-api.us-west-1.amazonaws.com/prod/players`,
 			{
 				method: "POST",
@@ -123,9 +122,9 @@
 				competition.innerHTML = '';
 				allPlayers.forEach(player => {
 					let card =
-						`<div class="w3-col m4 l3 disney-card w3-theme-d1">
-							<h4>${player.userName}</h4>
-							<table>`;
+`<div class="w3-col m4 l3 disney-card w3-theme-d1">
+	<h4>${player.userName}</h4>
+	<table>`;
 					player.moves.forEach(m => {
 						let match = m[0] + m[2] + m[4] + m[6] + m[8];
 						card += postAttempt(match, "_____");
@@ -141,7 +140,6 @@
 		for(let i = 0; i < 5; i++) {
 			move += match[i] + attempt[i];
 		}
-		debugger
 
 		//       fetch("https://slcrbpag33.execute-api.us-west-1.amazonaws.com/prod", {
 		fetch(_config.api.invokeUrl, {
