@@ -143,7 +143,7 @@
 
 		//       fetch("https://slcrbpag33.execute-api.us-west-1.amazonaws.com/prod", {
 		fetch(_config.api.invokeUrl, {
-			method: 'POST',     //  or is it PUT
+			method: 'PUT',
 			headers: { Authorization: authToken },
 			body: JSON.stringify({ userName : userName, gameKey: gameKey, move: move }),
 			contentType: 'application/json',
