@@ -119,7 +119,7 @@
 			})
 			.then(resp => resp.json())
 			.then(games => {
-				let allPlayers = games.filter(f => f.gameKey === gameKey && f.userName !== userName);
+				let allPlayers = games.filter(f => f.userName !== userName);
 				competition.innerHTML = '';
 				allPlayers.forEach(player => {
 					let card =
