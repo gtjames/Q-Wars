@@ -43,7 +43,7 @@
 
 		if (e.keyCode === 8) {
 			guess = guess.substr(0,guess.length-1);
-			document.getElementById(guess.length+"").value = letter;
+			document.getElementById(guess.length+"").value = '';
 			return;
 		} else if (e.keyCode === 13) {
 			search();
