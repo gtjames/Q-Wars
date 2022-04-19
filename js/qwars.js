@@ -41,6 +41,14 @@
 		if (guess.length === 5)
 			return;
 
+		if (e.keyCode === 8) {
+			guess = guess.substr(0,guess.length-1);
+			document.getElementById(guess.length+"").value = letter;
+			return;
+		} else if (e.keyCode === 13) {
+			search();
+			return;
+		}
 		let letter = String.fromCharCode(e.keyCode);
 		console.log(letter);
 		letter = letter.toLowerCase();
