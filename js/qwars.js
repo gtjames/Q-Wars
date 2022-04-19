@@ -129,7 +129,11 @@
 		findPossibles(unused, lock, match);
 		userAttempts.innerHTML += postAttempt(match, attempt)
 		makeAMove(match, attempt);
-
+		if (attempt === hiddenWord) {
+			hiddenWord = selectRandomWord();
+			foundYou.innerHTML = `${hiddenWord}<br>`;
+			competition.innerHTML += ``;
+		}
 	}
 
 	function postAttempt(match, attempt) {
@@ -248,6 +252,7 @@
 		}
 		tryThis.innerHTML = text;
 		foundYou.innerHTML += `Possibles ${possibles.length}<br>`;
+		return possibles.length;
 	}
 
 	function setActive(letter, status) {
