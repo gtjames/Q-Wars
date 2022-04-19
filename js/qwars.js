@@ -38,9 +38,6 @@
 	let guess = '';
 
 	function readKey(e) {
-		if (guess.length === 5)
-			return;
-
 		if (e.keyCode === 8) {
 			guess = guess.substr(0,guess.length-1);
 			document.getElementById(guess.length+"").value = '';
@@ -49,6 +46,10 @@
 			search();
 			return;
 		}
+
+		if (guess.length === 5)
+			return;
+
 		let letter = String.fromCharCode(e.keyCode);
 		console.log(letter);
 		letter = letter.toLowerCase();
