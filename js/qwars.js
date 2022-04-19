@@ -35,15 +35,17 @@
 	}
 
 	window.addEventListener('keydown', readKey);
+	let guess = '';
+
 	function readKey(e) {
-		if (attempt.length === 5)
+		if (guess.length === 5)
 			return;
 
 		const keyPressed = document.querySelector(`[data-key="${e.keyCode.toLowerCase()}"]`);
 //		if (!keyPressed) return;
 
-		document.getElementById(attempt.length+"").value = e.keyCode;
-		attempt.value += e.keyCode;
+		document.getElementById(guess.length+"").value = e.keyCode;
+		guess += e.keyCode;
 	}
 
 	// let allKeys = document.querySelectorAll(`[data-key]`);
@@ -112,7 +114,7 @@
 			}
 		}
 
-		findPossibles(attempt, unused, lock, match);
+		findPossibles(unused, lock, match);
 		userAttempts.innerHTML += postAttempt(match, attempt)
 		makeAMove(match, attempt);
 
@@ -198,7 +200,7 @@
 		return fiveLetters[index];
 	}
 
-	function findPossibles(attempt, unused, lock, match) {
+	function findPossibles(unused, lock, match) {
 
 		let possibles = fiveLetters;
 		//  eliminate all words that contain an unused letter
