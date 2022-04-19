@@ -18,21 +18,6 @@ html, body, #main {
     background: transparent;
 }
 
-#request {
-    position: relative;
-    background: #fcc1d4 none repeat scroll 0 0;
-    color: #000;
-    border-color: #000;
-    border-radius: 5px;
-    text-align: center;
-    width: 135px;
-}
-
-#request:disabled {
-    color: #999;
-    border-color: #999;
-}
-
 #accountLink {
     background: inherit;
 }

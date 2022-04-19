@@ -45,8 +45,6 @@
             display: flex;
             width: 90%;
             margin: 0 auto 8px;
-            /* https://stackoverflow.com/questions/46167604/ios-html-disable-double-tap-to-zoom */
-            /*touch-action: manipulation;*/
         }
 
         button {
@@ -68,8 +66,8 @@
 
         .oneLetter {
             width: 2em;
-            height: 20px;
-            font-size: .5em;
+            /*height: 20px;*/
+            /*font-size: .5em;*/
         }
         .half {flex: 0.5;}
 
@@ -84,7 +82,6 @@
 
 <div class="info panel panel-default">
     <div class="panel-heading">
-        <button id="request" class="btn btn-primary" disabled="disabled">Set pickup</button>
         <div class="dropdown pull-right">
             <button id="accountLink" class="btn" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 Account <span class="caret"></span>
@@ -96,7 +93,6 @@
     </div>
     <div class="panel-body">
         <ol id="updates">
-            <li>Welcome! Click the map to set your pickup location.</li>
         </ol>
     </div>
 </div>

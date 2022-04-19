@@ -168,7 +168,7 @@
 
 	function completeRequest(result) {
 		console.log('Response received from API: ', JSON.stringify(result));
-		displayUpdate(`your move ${JSON.stringify(result)}`);
+		// displayUpdate(`your move ${JSON.stringify(result)}`);
 	}
 
 	function initializeGame(words) {
