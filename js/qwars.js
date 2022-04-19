@@ -41,11 +41,14 @@
 		if (guess.length === 5)
 			return;
 
-		const keyPressed = document.querySelector(`[data-key="${e.keyCode.toLowerCase()}"]`);
+		let letter = String.fromCharCode(e.keyCode);
+		console.log(letter);
+		letter = letter.toLowerCase();
+		const keyPressed = document.querySelector(`[data-key="${letter}"]`);
 //		if (!keyPressed) return;
 
-		document.getElementById(guess.length+"").value = e.keyCode;
-		guess += e.keyCode;
+		document.getElementById(guess.length+"").value = letter;
+		guess += letter;
 	}
 
 	// let allKeys = document.querySelectorAll(`[data-key]`);
