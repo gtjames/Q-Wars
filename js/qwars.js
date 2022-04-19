@@ -133,6 +133,10 @@
 			hiddenWord = selectRandomWord();
 			foundYou.innerHTML = `${hiddenWord}<br>`;
 			competition.innerHTML += ``;
+			for (let i = 0; i < 5; i++) {
+				document.getElementById(i+"").value = ''
+			}
+
 		}
 	}
 
