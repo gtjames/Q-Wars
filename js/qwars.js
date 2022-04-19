@@ -38,6 +38,7 @@
 	let match = ['_','_','_','_','_'];
 	let lock  = ['_','_','_','_','_'];
 	let userName = localStorage.getItem("userName");
+	document.getElementById("userName", userName)
 	let gameKey;
 
 	let competition = document.getElementById('competition');
@@ -119,16 +120,16 @@
 			})
 			.then(resp => resp.json())
 			.then(games => {
-				let allPlayers = games.filter(f => f.userName !== userName);
+				let allPlayers = games;		//	.filter(f => f.userName !== userName);
 				competition.innerHTML = '';
 				allPlayers.forEach(player => {
-					let card =
-`<div class="w3-col m4 l3 disney-card w3-theme-d1">
-	<h4>${player.userName}</h4>
-	<table>`;
+					let card = `<div class="w3-col m4 l3 disney-card w3-theme-d1">
+									<h4>${player.userName}</h4>
+									<table>`;
 					player.moves.forEach(m => {
-						let match = m[0] + m[2] + m[4] + m[6] + m[8];
-						card += postAttempt(match, "_____");
+						let match  = x.split('').filter((x,idx) => idx % 2 === 0);
+						let filler = x.split('').filter((x,idx) => idx % 2 === 1);
+						card += postAttempt(match, filler);
 					})
 					competition.innerHTML += `${card}</table></div>`;
 				})
