@@ -34,6 +34,22 @@
 		$('#updates').append($('<li>' + text + '</li>'));
 	}
 
+	window.addEventListener('keydown', readKey);
+	function readKey(e) {
+		if (attempt.length === 5)
+			return;
+
+		const keyPressed = document.querySelector(`[data-key="${e.keyCode.toLowerCase()}"]`);
+//		if (!keyPressed) return;
+
+		document.getElementById(attempt.length+"").value = e.keyCode;
+		attempt.value += e.keyCode;
+	}
+
+	// let allKeys = document.querySelectorAll(`[data-key]`);
+	// link.dataset.key
+	// link.getAttribute('data-key');
+
 	let fiveLetters, hiddenWord, unused = [], close = [];
 	let match = ['_','_','_','_','_'];
 	let lock  = ['_','_','_','_','_'];
@@ -131,7 +147,7 @@
 			})
 			.then(resp => resp.json())
 			.then(games => {
-				let allPlayers = games;		//	.filter(f => f.userName !== userName);
+				let allPlayers = games.filter(p => p.userName !== userName && p.moves.length > 0);
 				competition.innerHTML = '';
 				allPlayers.forEach(player => {
 					let card = `<div class="w3-col m4 l3 disney-card w3-theme-d1">
