@@ -38,12 +38,11 @@
 	let match = ['_','_','_','_','_'];
 	let lock  = ['_','_','_','_','_'];
 	let userName = localStorage.getItem("userName");
-	document.getElementById("userName", userName)
+	document.getElementById("userName").value = userName;
 	let gameKey;
 
 	let competition = document.getElementById('competition');
 	let userAttempts = document.getElementById('userAttempts');
-	let guess = document.getElementById('guess');
 	let foundYou = document.getElementById('foundYou');
 	let error = document.getElementById('error');
 	let tryThis = document.getElementById('tryThis');
@@ -57,7 +56,7 @@
 	});
 
 	document.getElementById('newUser').addEventListener('click', newUser);
-	document.getElementById('eliminate').addEventListener('click', eliminate);
+	document.getElementById('eliminate').addEventListener('click', search);
 
 	function newUser() {
 		userName = document.getElementById("userName").value;
@@ -65,31 +64,42 @@
 		createGame(userName, gameKey)
 	}
 
-	function eliminate() {
-		let letter, attempt = '';
+	function search() {
+		let match = ['_','_','_','_','_'];
+		let attempt = '';
+
 		for (let i = 0; i < 5; i++) {
-			letter = document.getElementById(i+"").value;
-			if ( letter >= 'A' && letter <= 'Z') {
-				lock[i] = letter.toLowerCase();
-				match[i] = 'e';
-				setActive(letter.toLowerCase(), 'e');
-				attempt += letter;
+			attempt += document.getElementById(i+"").value;
+		}
+
+		error.innerText = '';
+		if ( fiveLetters.find(w => w === attempt) !== attempt) {
+			error.innerText = `${attempt}: is not a valid word`;
+			return;
+		}
+
+		for (let g = 0; g < 5; g++) {
+			let found = false;
+			for (let h = 0; h < 5; h++) {
+				if (hiddenWord[h] === attempt[g]) {
+					found = true;
+					if (match[g] === 'e') break;
+					match[g] = (h === g) ? 'e' : 'c';
+					setActive(attempt[g], match[g]);
+					if (match[g] === 'e') lock[g] = attempt[g];
+					if (match[g] === 'c') close.push(attempt[g]);
+				}
 			}
-			if ( letter >= 'a' && letter <= 'z')    {
-				close.push(letter);
-				if (match[i] !== 'c') match[i] = 'c';
-				attempt += letter;
-				setActive(letter, match[i]);
-			}
-			if (letter[0] === '!') {
-				attempt += letter.charAt(1);
-				setActive(letter.charAt(1), '_');
-				unused.push(letter.charAt(1));
+			if (!found) {
+				setActive(attempt[g], '_');
+				unused.push(attempt[g]);
 			}
 		}
-		findPossibles(attempt.toLowerCase(), unused, lock, match);
+
+		findPossibles(attempt, unused, lock, match);
 		userAttempts.innerHTML += postAttempt(match, attempt)
 		makeAMove(match, attempt);
+
 	}
 
 	function postAttempt(match, attempt) {
@@ -110,7 +120,8 @@
 			.catch(err => console.log('Fetch Error :', err) );
 	}
 
-	let timerId= setInterval(()=>{ getOtherMoves() }, 5000);
+	//let timerId =
+	setInterval(()=>{ getOtherMoves() }, 5000);
 
 	function getOtherMoves() {
 		fetch(`https://slcrbpag33.execute-api.us-west-1.amazonaws.com/prod/players`,
@@ -127,8 +138,8 @@
 									<h4>${player.userName}</h4>
 									<table>`;
 					player.moves.forEach(m => {
-						let match  = x.split('').filter((x,idx) => idx % 2 === 0);
-						let filler = x.split('').filter((x,idx) => idx % 2 === 1);
+						let match  = m.split('').filter((x,idx) => idx % 2 === 0);
+						let filler = m.split('').filter((x,idx) => idx % 2 === 1);
 						card += postAttempt(match, filler);
 					})
 					competition.innerHTML += `${card}</table></div>`;
@@ -169,44 +180,6 @@
 	function selectRandomWord() {
 		let index = Math.floor(Math.random() * fiveLetters.length);
 		return fiveLetters[index];
-	}
-
-	function search() {
-		let attempt = guess.value;
-		let match = ['_','_','_','_','_'];
-
-		error.innerText = '';
-		if ( fiveLetters.find(w => w === attempt) !== attempt) {
-			error.innerText = `${attempt}: is not a valid word`;
-			return;
-		}
-
-		for (let g = 0; g < 5; g++) {
-			let found = false;
-			for (let h = 0; h < 5; h++) {
-				if (hiddenWord[h] === attempt[g]) {
-					found = true;
-					if (match[g] === 'e') break;
-					match[g] = (h === g) ? 'e' : 'c';
-					setActive(attempt[g], match[g]);
-					if (match[g] === 'e') lock[g] = attempt[g];
-					if (match[g] === 'c') close.push(attempt[g]);
-				}
-			}
-			if (!found) {
-				setActive(attempt[g], '_');
-				unused.push(attempt[g]);
-			}
-		}
-
-		findPossibles(attempt, unused, lock, match);
-
-		let td ='';
-		for (let h = 0; h < 5; h++) {
-			td += `<td class="${match[h]}">${attempt[h]}</td>`
-		}
-		userAttempts.innerHTML += `<tr>${td}</tr>`;
-		// document.body.style.backgroundColor = getColorCode();
 	}
 
 	function findPossibles(attempt, unused, lock, match) {
@@ -258,5 +231,33 @@
 		});
 	}
 
+	/*
+	function eliminate() {
+		let letter, attempt = '';
+		for (let i = 0; i < 5; i++) {
+			letter = document.getElementById(i+"").value;
+			if ( letter >= 'A' && letter <= 'Z') {
+				lock[i] = letter.toLowerCase();
+				match[i] = 'e';
+				setActive(letter.toLowerCase(), 'e');
+				attempt += letter;
+			}
+			if ( letter >= 'a' && letter <= 'z')    {
+				close.push(letter);
+				if (match[i] !== 'c') match[i] = 'c';
+				attempt += letter;
+				setActive(letter, match[i]);
+			}
+			if (letter[0] === '!') {
+				attempt += letter.charAt(1);
+				setActive(letter.charAt(1), '_');
+				unused.push(letter.charAt(1));
+			}
+		}
+		findPossibles(attempt.toLowerCase(), unused, lock, match);
+		userAttempts.innerHTML += postAttempt(match, attempt)
+		makeAMove(match, attempt);
+	}
+	 */
 
 }(jQuery));
