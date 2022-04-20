@@ -55,7 +55,7 @@
 			return;
 		}
 		//	ignore anything besides a-z and A-Z
-		if ( ! (e.keyCode >= 65 && e.keyCode <= 90 || e.keyCode >= 97 && e.keyCode <= 130)) {
+		if ( e.keyCode < 65 || e.keyCode > 90) {
 			console.log(e.keyCode);
 			return;
 		}
@@ -123,13 +123,13 @@
 		findPossibles(unused, lock, match);
 		userAttempts.innerHTML += postAttempt(match, attempt)
 		makeAMove(match, attempt);
+		for (let i = 0; i < 5; i++) {
+			document.getElementById(i+"").innerText = ''
+		}
 		if (attempt === hiddenWord) {
 			hiddenWord = selectRandomWord();
-			foundYou.innerHTML = `${hiddenWord}<br>`;
+			foundYou.innerHTML = `${hiddenWord}`;
 			userAttempts.innerHTML += ``;
-			for (let i = 0; i < 5; i++) {
-				document.getElementById(i+"").innerText = ''
-			}
 		}
 	}
 
