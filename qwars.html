@@ -30,7 +30,7 @@
     <style>
         body { background-color: lightcyan; }
 
-        #error { color:  red; font-size: .5em; }
+        #error { color:  red; font-size: 2em; }
 
         #keyboard, #userAttempts {
             margin: 0 8px;
@@ -120,7 +120,7 @@
         </tr>
         <tr>
             <td><button id="newUser">Search</button></td>
-            <td><p id="secretWord"></p><p id="possibleWords"></p></td>
+            <td id="secretWord"></td>
             <td id="error"></td>
         </tr>
         <tr><td><ul id="tryThis"></ul></td></tr>
@@ -148,6 +148,7 @@
         <div class="row"><div class="spacer half"></div><button data-key="a">a</button><button data-key="s">s</button><button data-key="d">d</button><button data-key="f">f</button><button data-key="g">g</button><button data-key="h">h</button><button data-key="j">j</button><button data-key="k">k</button><button data-key="l">l</button><div class="spacer half"></div></div>
         <div class="row"><div class="one-and-a-half"></div><button data-key="z">z</button><button data-key="x">x</button><button data-key="c">c</button><button data-key="v">v</button><button data-key="b">b</button><button data-key="n">n</button><button data-key="m">m</button><div class="one-and-a-half"></div></div>
     </div>
+    <p id="possibleWords"></p>
 </div>
 
 <script src="js/vendor/jquery-3.1.0.js"></script>
