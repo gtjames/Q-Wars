@@ -213,10 +213,10 @@
 	}
 
 	function findPossibles(unused, lock, match) {
-		unused = unused.toLowerCase();
+		lock = Array.from(new Set(lock.join('').toLowerCase().split('')))
 		unused = Array.from(new Set(unused.join('').toLowerCase().split('')))
-		lock = lock.toLowerCase();
-		close = close.toLowerCase();
+		close = Array.from(new Set(close.join('').toLowerCase().split('')))
+
 		let possibles = fiveLetters;
 		//  eliminate all words that contain an unused letter
 		possibles = possibles.filter(w => {
