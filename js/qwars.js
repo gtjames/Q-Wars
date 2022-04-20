@@ -55,23 +55,22 @@
 			return;
 		}
 		//	ignore anything besides a-z and A-Z
-		if (e.keyCode >= 65 && e.keyCode <= 90 ||
-			e.keyCode >= 97 && e.keyCode <= 130) {
+		if (!(e.keyCode >= 65 && e.keyCode <= 90 ||
+			  e.keyCode >= 97 && e.keyCode <= 130)) {
 			console.log(e.keyCode);
 			return;
 		}
 		let letter = String.fromCharCode(e.keyCode);
-
 
 		if (guess.length === 5)
 			return;
 
 		console.log(letter);
 		letter = letter.toLowerCase();
-		const keyPressed = document.querySelector(`[data-key="${letter}"]`);
-//		if (!keyPressed) return;
+		// const keyPressed = document.querySelector(`[data-key="${letter}"]`);
+		// if (!keyPressed) return;
 
-		document.getElementById(guess.length+"").value = letter;
+		document.getElementById(guess.length+"").innerText = letter;
 		guess += letter;
 	}
 
