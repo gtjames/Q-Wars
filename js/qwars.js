@@ -123,8 +123,9 @@
 		userAttempts.innerHTML += postAttempt(match, attempt)
 		makeAMove(match, attempt);
 		for (let i = 0; i < 5; i++) {
-			document.getElementById(i+"").innerText = ''
+			document.getElementById(i+"").innerText = '';
 		}
+		guess = '';
 		if (attempt === hiddenWord) {
 			hiddenWord = selectRandomWord();
 			foundYou.innerHTML = `${hiddenWord}`;
