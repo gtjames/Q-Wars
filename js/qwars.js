@@ -135,9 +135,9 @@
 	function postAttempt(match, attempt) {
 		let button ='';
 		for (let h = 0; h < 5; h++) {
-			button += `<button class="${match[h]}">${attempt[h]}</button>`
+			button += `<button class="${match[h]}">${attempt[h]}</button>`;
 		}
-		return `<tr><td>${button}</td></tr>`;
+		return `<div className="row">${button}</div>`;
 	}
 
 	function createGame(userName, gameKey) {
@@ -206,7 +206,7 @@
 
 	function selectRandomWord() {
 		let index = Math.floor(Math.random() * fiveLetters.length);
-		return fiveLetters[index];
+		return fiveLetters[index].toUpperCase();
 	}
 
 	function findPossibles(unused, lock, match) {
