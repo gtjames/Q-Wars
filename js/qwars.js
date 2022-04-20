@@ -37,7 +37,8 @@
 	document.getElementById("userName").value = userName;
 	let competition 	= document.getElementById('competition');
 	let userAttempts 	= document.getElementById('userAttempts');
-	let foundYou 		= document.getElementById('foundYou');
+	let secretWord 		= document.getElementById('secretWord');
+	let possibleWords 	= document.getElementById('possibleWords');
 	let error 			= document.getElementById('error');
 	let tryThis 		= document.getElementById('tryThis');
 
@@ -128,7 +129,7 @@
 		guess = '';
 		if (attempt === hiddenWord) {
 			hiddenWord = selectRandomWord();
-			foundYou.innerHTML = `${hiddenWord}`;
+			secretWord.innerHTML = `${hiddenWord}`;
 			userAttempts.innerHTML = ``;
 			close = [];
 			lock  = ['_','_','_','_','_'];
@@ -205,7 +206,7 @@
 	function initializeGame(words) {
 		fiveLetters = words.split('\n');
 		hiddenWord = selectRandomWord();
-		foundYou.innerHTML = `${hiddenWord}<br>`;
+		secretWord.innerHTML = `${hiddenWord}`;
 	}
 
 	function selectRandomWord() {
@@ -251,7 +252,7 @@
 			text += `<li>${w}</li>`;
 		}
 		tryThis.innerHTML = text;
-		foundYou.innerHTML += `Possibles ${possibles.length}<br>`;
+		possibleWords.innerHTML = `Possibles ${possibles.length}<br>`;
 		return possibles.length;
 	}
 
