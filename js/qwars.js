@@ -6,11 +6,8 @@
 	let authToken;
 
 	WildRydes.authToken.then(function setAuthToken(token) {
-		if (token) {
-			authToken = token;
-		} else {
-			window.location.href = '/signin.html';
-		}
+		if (token) 	{ authToken = token; }
+		else 		{ window.location.href = '/signin.html'; 	}
 	}).catch(function handleTokenError(error) {
 		alert(error);
 		window.location.href = '/signin.html';
@@ -18,24 +15,35 @@
 
 	// Register click handler for #request button
 	$(function onDocReady() {
-		WildRydes.authToken.then(function updateAuthMessage(token) {
-			if (token) {
-				displayUpdate('You are authenticated. Click to see your <a href="#authTokenModal" data-toggle="modal">auth token</a>.');
-				$('.authToken').text(token);
-			}
+		WildRydes.authToken.then((token) => {
+			if (token) { console.log(`You are authenticated. Your token is: ${token}`); }
 		});
 
-		if (!_config.api.invokeUrl) {
-			$('#noApiMessage').show();
-		}
+		if (!_config.api.invokeUrl) { $('#noApiMessage').show(); }
+
+		fetch('https://raw.githubusercontent.com/gtjames/csv/master/Dictionaries/five.txt')
+			.then(resp => resp.text())
+			.then(words => initializeGame(words) )
 	});
 
-	function displayUpdate(text) {
-		$('#updates').append($('<li>' + text + '</li>'));
-	}
-
-	window.addEventListener('keydown', readKey);
+	let fiveLetters, hiddenWord, unused = [], close = [];
+	let match = ['_','_','_','_','_'];
+	let lock  = ['_','_','_','_','_'];
 	let guess = '';
+	let gameKey;
+	let userName = localStorage.getItem("userName");
+	let timerId = -1;
+
+	document.getElementById("userName").value = userName;
+	let competition 	= document.getElementById('competition');
+	let userAttempts 	= document.getElementById('userAttempts');
+	let foundYou 		= document.getElementById('foundYou');
+	let error 			= document.getElementById('error');
+	let tryThis 		= document.getElementById('tryThis');
+
+	document.getElementById('newUser').addEventListener('click', newUser);
+	document.getElementById('eliminate').addEventListener('click', search);
+	window.addEventListener('keydown', readKey);
 
 	function readKey(e) {
 		if (e.keyCode === 8) {
@@ -46,11 +54,18 @@
 			search();
 			return;
 		}
+		//	ignore anything besides a-z and A-Z
+		if (e.keyCode >= 65 && e.keyCode <= 90 ||
+			e.keyCode >= 97 && e.keyCode <= 130) {
+			console.log(e.keyCode);
+			return;
+		}
+		let letter = String.fromCharCode(e.keyCode);
+
 
 		if (guess.length === 5)
 			return;
 
-		let letter = String.fromCharCode(e.keyCode);
 		console.log(letter);
 		letter = letter.toLowerCase();
 		const keyPressed = document.querySelector(`[data-key="${letter}"]`);
@@ -64,34 +79,14 @@
 	// link.dataset.key
 	// link.getAttribute('data-key');
 
-	let fiveLetters, hiddenWord, unused = [], close = [];
-	let match = ['_','_','_','_','_'];
-	let lock  = ['_','_','_','_','_'];
-	let userName = localStorage.getItem("userName");
-	document.getElementById("userName").value = userName;
-	let gameKey;
-
-	let competition = document.getElementById('competition');
-	let userAttempts = document.getElementById('userAttempts');
-	let foundYou = document.getElementById('foundYou');
-	let error = document.getElementById('error');
-	let tryThis = document.getElementById('tryThis');
-
-	window.addEventListener("load", function () {
-		// document.body.style.backgroundColor = getColorCode();
-
-		fetch('https://raw.githubusercontent.com/gtjames/csv/master/Dictionaries/five.txt')
-			.then(resp => resp.text())
-			.then(words => initializeGame(words) )
-	});
-
-	document.getElementById('newUser').addEventListener('click', newUser);
-	document.getElementById('eliminate').addEventListener('click', search);
-
 	function newUser() {
 		userName = document.getElementById("userName").value;
 		gameKey = document.getElementById("gameKey").value;
-		createGame(userName, gameKey)
+		createGame(userName, gameKey);
+		if (timerId !== -1)
+			clearTimeout(timerId);
+
+		timerId = setInterval(()=>{ getOtherMoves() }, 5000);
 	}
 
 	function search() {
@@ -132,11 +127,10 @@
 		if (attempt === hiddenWord) {
 			hiddenWord = selectRandomWord();
 			foundYou.innerHTML = `${hiddenWord}<br>`;
-			competition.innerHTML += ``;
+			userAttempts.innerHTML += ``;
 			for (let i = 0; i < 5; i++) {
 				document.getElementById(i+"").value = ''
 			}
-
 		}
 	}
 
@@ -157,9 +151,6 @@
 			.then((data) => console.log(data))
 			.catch(err => console.log('Fetch Error :', err) );
 	}
-
-	//let timerId =
-	setInterval(()=>{ getOtherMoves() }, 5000);
 
 	function getOtherMoves() {
 		fetch(`https://slcrbpag33.execute-api.us-west-1.amazonaws.com/prod/players`,
@@ -221,7 +212,6 @@
 	}
 
 	function findPossibles(unused, lock, match) {
-
 		let possibles = fiveLetters;
 		//  eliminate all words that contain an unused letter
 		possibles = possibles.filter(w => {
@@ -268,6 +258,10 @@
 				item.classList.add(status);
 			}
 		});
+	}
+
+	function displayUpdate(text) {
+		$('#updates').append($('<li>' + text + '</li>'));
 	}
 
 	/*
