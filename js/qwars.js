@@ -65,7 +65,6 @@
 			return;
 
 		console.log(letter);
-		letter = letter.toLowerCase();
 		// const keyPressed = document.querySelector(`[data-key="${letter}"]`);
 		// if (!keyPressed) return;
 
@@ -94,10 +93,10 @@
 		for (let i = 0; i < 5; i++) {
 			attempt += document.getElementById(i+"").innerText;
 		}
-		attempt = attempt.toLowerCase();
+		let lower = attempt.toLowerCase();
 
 		error.innerText = '';
-		if ( fiveLetters.find(w => w === attempt) !== attempt) {
+		if ( fiveLetters.find(w => w === lower) !== lower) {
 			error.innerText = `${attempt}: is not a valid word`;
 			return;
 		}
@@ -134,11 +133,11 @@
 	}
 
 	function postAttempt(match, attempt) {
-		let td ='';
+		let button ='';
 		for (let h = 0; h < 5; h++) {
-			td += `<td class="${match[h]}">${attempt[h]}</td>`
+			button += `<button class="${match[h]}">${attempt[h]}</button>`
 		}
-		return `<tr>${td}</tr>`;
+		return `<tr><td>${button}</td></tr>`;
 	}
 
 	function createGame(userName, gameKey) {
