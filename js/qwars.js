@@ -92,7 +92,7 @@
 		let attempt = '';
 
 		for (let i = 0; i < 5; i++) {
-			attempt += document.getElementById(i+"").value;
+			attempt += document.getElementById(i+"").innerText;
 		}
 
 		error.innerText = '';
@@ -127,7 +127,7 @@
 			foundYou.innerHTML = `${hiddenWord}<br>`;
 			userAttempts.innerHTML += ``;
 			for (let i = 0; i < 5; i++) {
-				document.getElementById(i+"").value = ''
+				document.getElementById(i+"").innerText = ''
 			}
 		}
 	}
@@ -266,7 +266,7 @@
 	function eliminate() {
 		let letter, attempt = '';
 		for (let i = 0; i < 5; i++) {
-			letter = document.getElementById(i+"").value;
+			letter = document.getElementById(i+"").innerText;
 			if ( letter >= 'A' && letter <= 'Z') {
 				lock[i] = letter.toLowerCase();
 				match[i] = 'e';
