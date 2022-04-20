@@ -48,15 +48,14 @@
 	function readKey(e) {
 		if (e.keyCode === 8) {
 			guess = guess.substr(0,guess.length-1);
-			document.getElementById(guess.length+"").value = '';
+			document.getElementById(guess.length+"").innerText = '';
 			return;
 		} else if (e.keyCode === 13) {
 			search();
 			return;
 		}
 		//	ignore anything besides a-z and A-Z
-		if (!(e.keyCode >= 65 && e.keyCode <= 90 ||
-			  e.keyCode >= 97 && e.keyCode <= 130)) {
+		if ( ! (e.keyCode >= 65 && e.keyCode <= 90 || e.keyCode >= 97 && e.keyCode <= 130)) {
 			console.log(e.keyCode);
 			return;
 		}
