@@ -129,6 +129,9 @@
 			hiddenWord = selectRandomWord();
 			foundYou.innerHTML = `${hiddenWord}`;
 			userAttempts.innerHTML += ``;
+			close = [];
+			lock  = ['_','_','_','_','_'];
+			unused = [];
 		}
 	}
 
@@ -210,6 +213,9 @@
 	}
 
 	function findPossibles(unused, lock, match) {
+		unused = unused.toLowerCase();
+		lock = lock.toLowerCase();
+		close = close.toLowerCase();
 		let possibles = fiveLetters;
 		//  eliminate all words that contain an unused letter
 		possibles = possibles.filter(w => {
