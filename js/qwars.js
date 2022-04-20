@@ -137,7 +137,7 @@
 		for (let h = 0; h < 5; h++) {
 			button += `<button class="${match[h]}">${attempt[h]}</button>`;
 		}
-		return `<div className="row">${button}</div>`;
+		return `<div class="row">${button}</div>`;
 	}
 
 	function createGame(userName, gameKey) {
