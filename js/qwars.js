@@ -129,7 +129,7 @@
 		if (attempt === hiddenWord) {
 			hiddenWord = selectRandomWord();
 			foundYou.innerHTML = `${hiddenWord}`;
-			userAttempts.innerHTML += ``;
+			userAttempts.innerHTML = ``;
 			close = [];
 			lock  = ['_','_','_','_','_'];
 			unused = [];
