@@ -94,6 +94,7 @@
 		for (let i = 0; i < 5; i++) {
 			attempt += document.getElementById(i+"").innerText;
 		}
+		attempt = attempt.toLowerCase();
 
 		error.innerText = '';
 		if ( fiveLetters.find(w => w === attempt) !== attempt) {
