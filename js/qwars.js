@@ -214,6 +214,7 @@
 
 	function findPossibles(unused, lock, match) {
 		unused = unused.toLowerCase();
+		unused = Array.from(new Set(unused.join('').toLowerCase().split('')))
 		lock = lock.toLowerCase();
 		close = close.toLowerCase();
 		let possibles = fiveLetters;
