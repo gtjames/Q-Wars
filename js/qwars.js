@@ -26,7 +26,7 @@
 			.then(words => initializeGame(words) )
 	});
 
-	let fiveLetters, hiddenWord, unused = [], close = [];
+	let fiveLetters, hiddenWord, unused = [], close = [[],[],[],[],[]];
 	let match = ['_','_','_','_','_'];
 	let lock  = ['_','_','_','_','_'];
 	let guess = '';
@@ -111,7 +111,7 @@
 					match[g] = (h === g) ? 'e' : 'c';
 					setActive(attempt[g], match[g]);
 					if (match[g] === 'e') lock[g] = attempt[g];
-					if (match[g] === 'c') close.push(attempt[g]);
+					if (match[g] === 'c') close[g].push(attempt[g]);
 				}
 			}
 			if (!found) {
@@ -131,7 +131,7 @@
 			hiddenWord = selectRandomWord();
 			secretWord.innerHTML = `${hiddenWord}`;
 			userAttempts.innerHTML = ``;
-			close = [];
+			close = [[],[],[],[],[]];
 			lock  = ['_','_','_','_','_'];
 			unused = [];
 		}
@@ -217,8 +217,9 @@
 	function findPossibles(unused, lock, match) {
 		lock = Array.from(new Set(lock.join('').toLowerCase().split('')))
 		unused = Array.from(new Set(unused.join('').toLowerCase().split('')))
-		close = Array.from(new Set(close.join('').toLowerCase().split('')))
-
+		for (let i = 0; i < 5; i++) {
+			close[i] = Array.from(new Set(close[i].join('').toLowerCase().split('')))
+		}
 		let possibles = fiveLetters;
 		//  eliminate all words that contain an unused letter
 		possibles = possibles.filter(w => {
@@ -239,10 +240,12 @@
 		});
 
 		//  find words that have all of the possible letters
-		possibles = possibles.filter(w => {
-			for (let c of close) {
-				if (w.indexOf(c) === -1)
-					return false;           //  does not contain a close letter
+		possibles = possibles.filter(word => {
+			for (let [index, position] of close) {
+				for (let c of position) {
+					if (word.indexOf(c) === -1 || word.indexOf((c) === index))
+						return false;           //  does not contain a close letter
+				}
 			}
 			return true;                    //  contains all close letters
 		});
