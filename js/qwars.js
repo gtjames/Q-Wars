@@ -127,7 +127,7 @@
 			unused = [];
 			const allTypes = document.querySelectorAll("div.row > button");
 			allTypes.forEach((item) => {
-				item.class = '';
+				item.className = '';
 			});
 		}
 	}
