@@ -65,17 +65,9 @@
 		if (guess.length === 5)
 			return;
 
-		console.log(letter);
-		// const keyPressed = document.querySelector(`[data-key="${letter}"]`);
-		// if (!keyPressed) return;
-
 		document.getElementById(guess.length+"").innerText = letter;
 		guess += letter;
 	}
-
-	// let allKeys = document.querySelectorAll(`[data-key]`);
-	// link.dataset.key
-	// link.getAttribute('data-key');
 
 	function newUser() {
 		userName = document.getElementById("userName").value;
@@ -94,10 +86,9 @@
 		for (let i = 0; i < 5; i++) {
 			attempt += document.getElementById(i+"").innerText;
 		}
-		let lower = attempt.toLowerCase();
 
 		error.innerText = '';
-		if ( fiveLetters.find(w => w === lower) !== lower) {
+		if ( fiveLetters.find(w => w === attempt) !== attempt) {
 			error.innerText = `${attempt}: is not a valid word`;
 			return;
 		}
@@ -200,7 +191,6 @@
 
 	function completeRequest(result) {
 		console.log('Response received from API: ', JSON.stringify(result));
-		// displayUpdate(`your move ${JSON.stringify(result)}`);
 	}
 
 	function initializeGame(words) {
@@ -211,14 +201,14 @@
 
 	function selectRandomWord() {
 		let index = Math.floor(Math.random() * fiveLetters.length);
-		return fiveLetters[index].toUpperCase();
+		return fiveLetters[index];
 	}
 
 	function findPossibles(unused, lock, match) {
-		lock = Array.from(new Set(lock.join('').toLowerCase().split('')))
-		unused = Array.from(new Set(unused.join('').toLowerCase().split('')))
+		lock = Array.from(new Set(lock.join('').split('')))
+		unused = Array.from(new Set(unused.join('').split('')))
 		for (let i = 0; i < 5; i++) {
-			close[i] = Array.from(new Set(close[i].join('').toLowerCase().split('')))
+			close[i] = Array.from(new Set(close[i].join('').split('')))
 		}
 		let possibles = fiveLetters;
 		//  eliminate all words that contain an unused letter
@@ -280,9 +270,9 @@
 		for (let i = 0; i < 5; i++) {
 			letter = document.getElementById(i+"").innerText;
 			if ( letter >= 'A' && letter <= 'Z') {
-				lock[i] = letter.toLowerCase();
+				lock[i] = letter;
 				match[i] = 'e';
-				setActive(letter.toLowerCase(), 'e');
+				setActive(letter, 'e');
 				attempt += letter;
 			}
 			if ( letter >= 'a' && letter <= 'z')    {
@@ -297,7 +287,7 @@
 				unused.push(letter.charAt(1));
 			}
 		}
-		findPossibles(attempt.toLowerCase(), unused, lock, match);
+		findPossibles(attempt, unused, lock, match);
 		userAttempts.innerHTML += postAttempt(match, attempt)
 		makeAMove(match, attempt);
 	}
