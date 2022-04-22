@@ -107,7 +107,7 @@
 			for (let h = 0; h < 5; h++) {
 				if (hiddenWord[h] === attempt[g]) {
 					found = true;
-					if (match[g] === 'e') break;
+					if (match[g] === 'e') continue;
 					match[g] = (h === g) ? 'e' : 'c';
 					setActive(attempt[g], match[g]);
 					if (match[g] === 'e') lock[g] = attempt[g];
