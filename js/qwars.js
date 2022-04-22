@@ -243,7 +243,7 @@
 		possibles = possibles.filter(word => {
 			for (const [index, position] of close.entries()) {
 				for (let c of position) {
-					if (word.indexOf(c) === -1 || word.indexOf((c) === index))
+					if (word.indexOf(c) === -1 || word.indexOf(c) === index)
 						return false;           //  does not contain a close letter
 				}
 			}
