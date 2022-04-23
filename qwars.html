@@ -25,6 +25,9 @@
             padding: 5px 5px;
             font-family: "Courier New",serif
         }
+        .stats {
+            font-size: 12px;
+        }
     </style>
 
     <style>
@@ -32,7 +35,7 @@
 
         #error { color:  red; font-size: 2em; }
 
-        #keyboard, #userAttempts {
+        #keyboard, #userAttempts, .keyboard {
             margin: 0 8px;
             user-select: none;
         }
@@ -132,6 +135,7 @@
             <td><button id="2" class="oneLetter"></button></td>
             <td><button id="3" class="oneLetter"></button></td>
             <td><button id="4" class="oneLetter"></button></td>
+            <td><button id="progress"></button></td>
         </tr>
         <tr>
             <td colspan="5"> <button id="eliminate">Search</button> </td>
@@ -139,7 +143,7 @@
     </table>
     <hr>
     <div class="w3-col m4 l3 disney-card w3-theme-l1">
-        <div id="userAttempts"></div>
+        <div id="userAttempts" class="keyboard"></div>
     </div>
     <div id="competition"></div>
     <div id="keyboard">
