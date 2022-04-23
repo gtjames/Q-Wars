@@ -77,10 +77,11 @@
 		userAttempts.innerHTML 	= ``;
 		progress.innerHTML 		= '';
 		possibleWords.innerHTML = '';
-		const allTypes = document.querySelectorAll("div.row > button");
-		allTypes.forEach((item) => {
-			item.className = '';
-		});
+		tryThis.innerHTML 		= '';
+		const allKeys = document.querySelectorAll("div.row > button");
+		allKeys.forEach(key => key.className = '');
+		const guesses = document.querySelectorAll(".class");
+		guesses.forEach(key => key.innerText = '');
 	}
 
 	/**
@@ -162,7 +163,7 @@
 
 		//	let's see what words match our hits and misses so far
 		findPossibles(lock);
-		userAttempts.innerHTML += postAttempt(match, stats)
+		userAttempts.innerHTML += postAttempt(match, guess, stats)
 		makeAMove(match, guess);
 		for (let i = 0; i < 5; i++) {
 			document.getElementById(i + "").innerText = '';
@@ -177,10 +178,10 @@
 	 * @param stats
 	 * @returns {string}
 	 */
-	function postAttempt(match, stats) {
+	function postAttempt(match, userGuess, stats) {
 		let button ='';
 		for (let h = 0; h < 5; h++) {
-			button += `<button class="${match[h]}">${guess[h]}</button>`;
+			button += `<button class="${match[h]}">${userGuess[h]}</button>`;
 		}
 
 		//		<p class='stats'>${stats}</p></div>
@@ -214,7 +215,7 @@
 					player.moves.forEach(m => {
 						let match  = m.split('').filter((x,idx) => idx % 2 === 0);
 						let filler = m.split('').filter((x,idx) => idx % 2 === 1);
-						card += postAttempt(match, filler);
+						card += postAttempt(match, filler, '');
 					})
 					competition.innerHTML += `${card}</table></div>`;
 				})
