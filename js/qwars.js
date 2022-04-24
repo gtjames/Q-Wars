@@ -80,7 +80,7 @@
 		tryThis.innerHTML 		= '';
 		const allKeys = document.querySelectorAll("div.row > button");
 		allKeys.forEach(key => key.className = '');
-		const guesses = document.querySelectorAll(".class");
+		const guesses = document.querySelectorAll(".guess");
 		guesses.forEach(key => key.innerText = '');
 	}
 
