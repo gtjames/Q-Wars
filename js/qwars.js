@@ -174,9 +174,10 @@
 	/**
 	 * 		postAttempt
 	 * 			Add this attempt to the list of guessed words
-	 * @param match
-	 * @param stats
-	 * @returns {string}
+	 * @param match			_ - not found, e found at this position, c - found in the word but not here
+	 * @param userGuess		the word typed by the user
+	 * @param stats			hits and misses
+	 * @returns {string}	string with the formatted word of hits and misses
 	 */
 	function postAttempt(match, userGuess, stats) {
 		let button ='';
@@ -321,11 +322,11 @@
 		});
 	}
 
+	/*
 	function displayUpdate(text) {
 		$('#updates').append($('<li>' + text + '</li>'));
 	}
 
-	/*
 	function eliminate() {
 		let letter, attempt = '';
 		for (let i = 0; i < 5; i++) {
