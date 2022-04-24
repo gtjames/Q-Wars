@@ -200,10 +200,10 @@
 	}
 
 	function getOtherMoves() {
-		fetch(`https://slcrbpag33.execute-api.us-west-1.amazonaws.com/prod/players`,
+		fetch(`https://slcrbpag33.execute-api.us-west-1.amazonaws.com/prod?gameKey=${gameKey}`,	//	players
 			{
-				method: "POST",
-				body: JSON.stringify({"gameKey": gameKey})
+				method: "GET",
+				// body: JSON.stringify({"gameKey": gameKey})
 			})
 			.then(resp => resp.json())
 			.then(games => {
