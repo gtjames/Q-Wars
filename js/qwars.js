@@ -69,7 +69,7 @@
 		let letters = document.getElementById('letters');
 		let text = '';
 		for (let l = 0; l < width; l++) {
-			text += `<td><button id="${l}" className="guess oneLetter"></button></td>`;
+			text += `<td><button id="${l}" class="guess oneLetter"></button></td>`;
 		}
 		letters.innerHTML = text + '<td><button id="progress"></button></td>';
 	}
