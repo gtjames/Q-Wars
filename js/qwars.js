@@ -20,16 +20,6 @@
 		});
 
 		if (!_config.api.invokeUrl) { $('#noApiMessage').show(); }
-
-		/**
-		 * 		read the list of five letter words
-		 */
-		fetch('https://raw.githubusercontent.com/gtjames/csv/master/Dictionaries/five.txt')
-			.then(resp => resp.text())
-			.then(words => {
-				fiveLetters = words.split('\n');
-				initializeGame()
-			});
 	});
 
 	/**
@@ -38,7 +28,7 @@
 	 * 		get references to all important page elements
 	 */
 
-	let fiveLetters, hiddenWord, unused, close, lock, guess;
+	let fiveLetters, hiddenWord, unused, close, lock, guess, width;
 
 	let gameKey;
 	let userName = localStorage.getItem("userName");
@@ -51,6 +41,7 @@
 	let tryThis 		= document.getElementById('tryThis');
 	let progress 		= document.getElementById('progress');
 	let competition 	= document.getElementById('competition');
+	let selectWidth 	= document.getElementById('selectWidth');
 
 	document.getElementById("userName").value = userName;
 
@@ -59,7 +50,29 @@
 	 */
 	document.getElementById('newUser').addEventListener('click', newUser);
 	document.getElementById('eliminate').addEventListener('click', search);
+	selectWidth.addEventListener('click', loadWords);
 	window.addEventListener('keydown', readKey);
+
+	function loadWords(e) {
+		/**
+		 * 		read the list of five letter words
+		 */
+
+		width = e.target.value;
+		fetch(`https://raw.githubusercontent.com/gtjames/csv/master/Dictionaries/${width}Letters.txt`)
+			.then(resp => resp.text())
+			.then(words => {
+				fiveLetters = words.split('\n');
+				initializeGame()
+			});
+
+		let letters = document.getElementById('letters');
+		let text = '';
+		for (let l = 0; l < width; l++) {
+			text += `<td><button id="${l}" className="guess oneLetter"></button></td>`;
+		}
+		letters.innerHTML = text + '<td><button id="progress"></button></td>';
+	}
 
 	/**
 	 * 		initializeGame
@@ -95,8 +108,8 @@
 	function readKey(e) {
 		error.innerText = '';
 		if (e.keyCode === 13) {
-			if (guess.length !== 5) {
-				error.innerText = `${guess}: doesn't have 5 characters`;
+			if (guess.length !== width) {
+				error.innerText = `${guess}: doesn't have ${width} characters`;
 			} else {
 				//	check to see if the guessed word is a word
 				if ( fiveLetters.find(w => w === guess) !== guess) {
@@ -108,7 +121,7 @@
 		} else if (e.keyCode === 8) {
 			guess = guess.substr(0, guess.length - 1);
 			document.getElementById(guess.length + "").innerText = '';
-		} else if ( e.keyCode >= 65 && e.keyCode <= 90 && guess.length < 5 ) {
+		} else if ( e.keyCode >= 65 && e.keyCode <= 90 && guess.length < width ) {
 			let letter = String.fromCharCode(e.keyCode);
 			document.getElementById(guess.length + "").innerText = letter;
 			guess += letter;
@@ -122,7 +135,7 @@
 		if (timerId !== -1)
 			clearTimeout(timerId);
 
-		timerId = setInterval(()=>{ getOtherMoves() }, 5000);
+		timerId = setInterval(()=>{ getOtherMoves() }, 6000);
 	}
 
 	/**
@@ -139,9 +152,9 @@
 			return;
 		}
 
-		for (let g = 0; g < 5; g++) {
+		for (let g = 0; g < width; g++) {
 			let found = false;
-			for (let h = 0; h < 5; h++) {
+			for (let h = 0; h < width; h++) {
 				if (hiddenWord[h] === guess[g]) {
 					found = true;
 					if (match[g] === 'e') continue;
@@ -165,7 +178,7 @@
 		findPossibles(lock);
 		userAttempts.innerHTML += postAttempt(match, guess, stats)
 		makeAMove(match, guess);
-		for (let i = 0; i < 5; i++) {
+		for (let i = 0; i < width; i++) {
 			document.getElementById(i + "").innerText = '';
 		}
 		guess = '';
@@ -181,7 +194,7 @@
 	 */
 	function postAttempt(match, userGuess, stats) {
 		let button ='';
-		for (let h = 0; h < 5; h++) {
+		for (let h = 0; h < width; h++) {
 			button += `<button class="${match[h]}">${userGuess[h]}</button>`;
 		}
 
@@ -226,7 +239,7 @@
 
 	function makeAMove(match, attempt) {
 		let move = '';
-		for(let i = 0; i < 5; i++) {
+		for(let i = 0; i < width; i++) {
 			move += match[i] + attempt[i];
 		}
 
@@ -277,7 +290,7 @@
 
 		//  find the words that match position and letter
 		possibles = possibles.filter(w => {
-			for (let i = 0; i < 5; i++) {
+			for (let i = 0; i < width; i++) {
 				if ((lock[i] !== '_' && lock[i] !== w.charAt(i)))
 					return false;           //  this word doesn't have a matching letter in a required position
 			}
@@ -329,7 +342,7 @@
 
 	function eliminate() {
 		let letter, attempt = '';
-		for (let i = 0; i < 5; i++) {
+		for (let i = 0; i < width; i++) {
 			letter = document.getElementById(i+"").innerText;
 			if ( letter >= 'A' && letter <= 'Z') {
 				lock[i] = letter;
