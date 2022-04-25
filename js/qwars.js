@@ -84,7 +84,7 @@
 		hiddenWord 	= selectRandomWord();
 		guess 		= '';
 		unused 		= new Set();
-		lock  		= ['_','_','_','_','_'];
+		lock  		= '_'.repeat(guess.length).split('');
 		close 		= [new Set(),new Set(),new Set(),new Set(),new Set()];
 		numOfTries	= 0;
 
@@ -146,11 +146,13 @@
 	 * 			get the guessed word and check of found, matches or close
 	 */
 	function search() {
-		let match = ['_','_','_','_','_'];
+		let match = 'x'.repeat(guess.length).split('');
 
 		//	did we guess the word?
 		if (guess === hiddenWord) {
 			error.innerText = `You did it! You guessed: ${guess} in ${numOfTries} tries`;
+			userAttempts.innerHTML += postAttempt('x'.repeat(guess.length), guess, '')
+			makeAMove('x'.repeat(guess.length), guess);
 			return;
 		}
 
@@ -172,10 +174,11 @@
 				unused.add(guess[g]);
 			}
 		}
-		let stats ='Un ' + [...unused].join('') + ' -> ' + Array.from(close[0])
-			+ '_' + Array.from(close[1]) + '_' + Array.from(close[2])
-			+ '_' + Array.from(close[3]) + '_' + Array.from(close[4])
-			+ ' -> ' + lock;
+
+		// let stats ='Un ' + [...unused].join('') + ' -> ' + Array.from(close[0])
+		// 	+ '_' + Array.from(close[1]) + '_' + Array.from(close[2])
+		// 	+ '_' + Array.from(close[3]) + '_' + Array.from(close[4])
+		// 	+ ' -> ' + lock;
 
 		//	let's see what words match our hits and misses so far
 		findPossibles(lock);
