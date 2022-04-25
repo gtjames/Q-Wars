@@ -71,7 +71,7 @@
 		for (let l = 0; l < width; l++) {
 			text += `<td><button id="${l}" class="guess oneLetter"></button></td>`;
 		}
-		letters.innerHTML = text + '<td><button id="progress"></button></td>';
+		letters.innerHTML = text;
 	}
 
 	/**
@@ -101,7 +101,7 @@
 	 * 		readKey
 	 * 			listen for any user keystrokes
 	 * 			CR	search work matching letters
-	 * 			BS	removev the last character
+	 * 			BS	remove the last character
 	 * 			A-Z	add to the guessed work
 	 * 		@param e		key event object
 	 */
