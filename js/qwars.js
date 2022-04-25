@@ -33,6 +33,7 @@
 	let gameKey;
 	let userName = localStorage.getItem("userName");
 	let timerId = -1;
+	let numOfTries = 0;
 
 	let userAttempts 	= document.getElementById('userAttempts');
 	let secretWord 		= document.getElementById('secretWord');
@@ -51,6 +52,7 @@
 	document.getElementById('newUser').addEventListener('click', newUser);
 	document.getElementById('eliminate').addEventListener('click', search);
 	selectWidth.addEventListener('change', loadWords);
+	document.getElementById('playAgain').addEventListener('click', initializeGame);
 	window.addEventListener('keydown', readKey);
 
 	function loadWords(e) {
@@ -63,7 +65,6 @@
 			.then(resp => resp.text())
 			.then(words => {
 				fiveLetters = words.split('\n');
-				initializeGame()
 			});
 
 		let letters = document.getElementById('letters');
@@ -85,6 +86,7 @@
 		unused 		= new Set();
 		lock  		= ['_','_','_','_','_'];
 		close 		= [new Set(),new Set(),new Set(),new Set(),new Set()];
+		numOfTries	= 0;
 
 		secretWord.innerHTML 	= `${hiddenWord}`;
 		userAttempts.innerHTML 	= ``;
@@ -148,10 +150,11 @@
 
 		//	did we guess the word?
 		if (guess === hiddenWord) {
-			initializeGame()
+			error.innerText = `You did it! You guessed: ${guess} in ${numOfTries} tries`;
 			return;
 		}
 
+		numOfTries++;
 		for (let g = 0; g < width; g++) {
 			let found = false;
 			for (let h = 0; h < width; h++) {
