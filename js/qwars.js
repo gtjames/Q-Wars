@@ -175,7 +175,8 @@
 			}
 		}
 
-		// let stats ='Un ' + [...unused].join('') + ' -> ' + Array.from(close[0])
+		let stats = '';
+		// ='Un ' + [...unused].join('') + ' -> ' + Array.from(close[0])
 		// 	+ '_' + Array.from(close[1]) + '_' + Array.from(close[2])
 		// 	+ '_' + Array.from(close[3]) + '_' + Array.from(close[4])
 		// 	+ ' -> ' + lock;
