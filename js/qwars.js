@@ -58,7 +58,7 @@
 		 * 		read the list of five letter words
 		 */
 
-		width = e.target.value;
+		width = +e.target.value;		//	force width to be a number.
 		fetch(`https://raw.githubusercontent.com/gtjames/csv/master/Dictionaries/${width}Letters.txt`)
 			.then(resp => resp.text())
 			.then(words => {
