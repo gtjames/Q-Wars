@@ -73,6 +73,7 @@
 			text += `<td><button id="${l}" class="guess oneLetter"></button></td>`;
 		}
 		letters.innerHTML = text;
+		document.getElementById('0').addEventListener(showStats);
 	}
 
 	/**
@@ -152,7 +153,7 @@
 		//	did we guess the word?
 		if (guess === hiddenWord) {
 			error.innerText = `You did it! You guessed: ${guess} in ${numOfTries} tries`;
-			userAttempts.innerHTML += postAttempt('x'.repeat(guess.length), guess, '')
+			userAttempts.innerHTML += postAttempt('x'.repeat(guess.length), guess)
 			makeAMove('x'.repeat(guess.length), guess);
 			return;
 		}
@@ -176,20 +177,21 @@
 			}
 		}
 
-		let stats = '';
-		// ='Un ' + [...unused].join('') + ' -> ' + Array.from(close[0])
-		// 	+ '_' + Array.from(close[1]) + '_' + Array.from(close[2])
-		// 	+ '_' + Array.from(close[3]) + '_' + Array.from(close[4])
-		// 	+ ' -> ' + lock;
-
 		//	let's see what words match our hits and misses so far
 		findPossibles(lock);
-		userAttempts.innerHTML += postAttempt(match, guess, stats)
+		userAttempts.innerHTML += postAttempt(match, guess)
 		makeAMove(match, guess);
 		for (let i = 0; i < width; i++) {
 			document.getElementById(i + "").innerText = '';
 		}
 		guess = '';
+	}
+
+	function showStats() {
+		let stats = 'Un ' + [...unused].join('') + ' -> ';
+		close.map(c => stats + Array.from(c) + '_');
+		stats += ' -> ' + lock;
+		progress.innerHTML = stats;
 	}
 
 	/**
@@ -200,13 +202,11 @@
 	 * @param stats			hits and misses
 	 * @returns {string}	string with the formatted word of hits and misses
 	 */
-	function postAttempt(match, userGuess, stats) {
+	function postAttempt(match, userGuess) {
 		let button ='';
 		for (let h = 0; h < width; h++) {
 			button += `<button class="${match[h]}">${userGuess[h]}</button>`;
 		}
-
-		//		<p class='stats'>${stats}</p></div>
 		return `<div class="row">${button}`;
 	}
 
