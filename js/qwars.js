@@ -50,7 +50,7 @@
 	 */
 	document.getElementById('newUser').addEventListener('click', newUser);
 	document.getElementById('eliminate').addEventListener('click', search);
-	selectWidth.addEventListener('click', loadWords);
+	selectWidth.addEventListener('change', loadWords);
 	window.addEventListener('keydown', readKey);
 
 	function loadWords(e) {
