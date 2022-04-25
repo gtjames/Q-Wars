@@ -144,7 +144,7 @@
 	/**
 	 * 		search
 	 * 			It's show time!
-	 * 			get the guessed word and check of found, matches or close
+	 * 			get the guessed word and check if found, matches or close
 	 */
 	function search() {
 		let match = '_'.repeat(guess.length).split('');
