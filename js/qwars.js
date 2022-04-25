@@ -88,8 +88,9 @@
 		close 		= [new Set(),new Set(),new Set(),new Set(),new Set()];
 		numOfTries	= 0;
 
+		error.innerText 		= '';
 		secretWord.innerHTML 	= `${hiddenWord}`;
-		userAttempts.innerHTML 	= ``;
+		userAttempts.innerHTML 	= '';
 		progress.innerHTML 		= '';
 		possibleWords.innerHTML = '';
 		tryThis.innerHTML 		= '';
