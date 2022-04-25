@@ -147,7 +147,7 @@
 	 * 			get the guessed word and check of found, matches or close
 	 */
 	function search() {
-		let match = 'x'.repeat(guess.length).split('');
+		let match = '_'.repeat(guess.length).split('');
 
 		//	did we guess the word?
 		if (guess === hiddenWord) {
