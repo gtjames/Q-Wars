@@ -73,7 +73,7 @@
 			text += `<td><button id="${l}" class="guess oneLetter"></button></td>`;
 		}
 		letters.innerHTML = text;
-		document.getElementById('0').addEventListener(showStats);
+		document.getElementById('0').addEventListener('click', showStats);
 	}
 
 	/**
