@@ -98,7 +98,8 @@
 		const allKeys = document.querySelectorAll("div.row > button");
 		allKeys.forEach(key => key.className = '');
 		const guesses = document.querySelectorAll(".guess");
-		guesses.forEach(key => key.innerText = '');
+		guesses.forEach(spot => spot.innerText = '');
+		guesses.forEach(spot => spot.classList.remove('round'));
 	}
 
 	function reveal() {
@@ -160,6 +161,8 @@
 	function search() {
 		let match = '_'.repeat(guess.length).split('');
 
+		numOfTries++;
+
 		//	did we guess the word?
 		if (guess === hiddenWord) {
 			error.innerText = `You did it! You guessed: ${guess} in ${numOfTries} tries`;
@@ -168,7 +171,6 @@
 			return;
 		}
 
-		numOfTries++;
 		for (let g = 0; g < width; g++) {
 			let found = false;
 			for (let h = 0; h < width; h++) {
