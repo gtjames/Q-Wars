@@ -43,6 +43,9 @@
 	let selectWidth 	= document.getElementById('selectWidth');
 
 	document.getElementById("userName").value = userName;
+	let keyBoard 		= document.querySelectorAll("#keyboard button")
+	keyBoard.forEach(key => key.addEventListener('touch', readKey));
+	keyBoard.forEach(key => key.addEventListener('click', readKey));
 
 	/**
 	 * 		add event listeners for keystroke and search events
