@@ -132,13 +132,13 @@
 			}
 		} else if (e.keyCode === 8) {
 			guess = guess.substr(0, guess.length - 1);
-			document.getElementById(guess.length+ "").classList.toggle('round');
 			document.getElementById(guess.length + "").innerText = '';
+			document.getElementById(guess.length + "").classList.toggle('round');
 		} else if ( e.keyCode >= 65 && e.keyCode <= 90 && guess.length < width ) {
 			let letter = String.fromCharCode(e.keyCode);
 			document.getElementById(guess.length + "").innerText = letter;
+			document.getElementById(guess.length + "").classList.toggle('round');
 			guess += letter;
-			document.getElementById(guess.length+ "").classList.toggle('round');
 		}
 	}
 
