@@ -85,10 +85,9 @@
 		guess 		= '';
 		unused 		= new Set();
 		lock  		= '_'.repeat(width).split('');
-		let set		= new Set();
 		close 		= [];
 		for (let i = 0; i < width; i++) {
-			close.push(set);
+			close.push(new Set());
 		}
 		numOfTries	= 0;
 
