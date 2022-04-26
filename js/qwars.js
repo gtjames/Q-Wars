@@ -44,8 +44,9 @@
 
 	document.getElementById("userName").value = userName;
 	let keyBoard 		= document.querySelectorAll("#keyboard button")
-	keyBoard.forEach(key => key.addEventListener('touch', readKey));
-	keyBoard.forEach(key => key.addEventListener('click', readKey));
+	keyBoard.forEach(key => key.addEventListener('touch',	readKeyboard));
+	keyBoard.forEach(key => key.addEventListener('click',	readKeyboard));
+	window.addEventListener						('keydown',	readKey);
 
 	/**
 	 * 		add event listeners for keystroke and search events
@@ -55,7 +56,6 @@
 	selectWidth.addEventListener('change', loadWords);
 	document.getElementById('playAgain').addEventListener('click', initializeGame);
 	document.getElementById('reveal').addEventListener('click', reveal);
-	window.addEventListener('keydown', readKey);
 
 	function loadWords(e) {
 		/**
@@ -118,11 +118,23 @@
 	 * 			A-Z	add to the guessed work
 	 * 		@param e		key event object
 	 */
+
+	function readKeyboard(e) {
+		readKey( e.target.dataset.key );
+	}
+
 	function readKey(e) {
+		let key;
+		if 			(e.keyCode === 8 )	key = "BS";
+		else if 	(e.keyCode === 13)	key = "CR";
+		else  							key = String.fromCharCode(e.keyCode);
+		keyEvent(key);
+	}
+	function keyEvent(key) {
 		error.innerText = '';
 		const input = document.querySelectorAll(".guess");
 		input.forEach(spot => spot.classList.remove('nope'));
-		if (e.keyCode === 13) {
+		if (key === 'CR') {
 			if (guess.length !== width) {
 				error.innerText = `${guess}: doesn't have ${width} characters`;
 			} else {
@@ -134,15 +146,14 @@
 					search();
 				}
 			}
-		} else if (e.keyCode === 8) {
+		} else if (key === "BS") {
 			guess = guess.substr(0, guess.length - 1);
 			document.getElementById(guess.length + "").innerText = '';
 			document.getElementById(guess.length + "").classList.toggle('round');
-		} else if ( e.keyCode >= 65 && e.keyCode <= 90 && guess.length < width ) {
-			let letter = String.fromCharCode(e.keyCode);
-			document.getElementById(guess.length + "").innerText = letter;
+		} else if ( key >= 'A' && key <= 'Z' && guess.length < width ) {
+			document.getElementById(guess.length + "").innerText = key;
 			document.getElementById(guess.length + "").classList.toggle('round');
-			guess += letter;
+			guess += key;
 		}
 	}
 
