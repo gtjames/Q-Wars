@@ -52,7 +52,6 @@
 	 * 		add event listeners for keystroke and search events
 	 */
 	document.getElementById('newUser').addEventListener('click', newUser);
-	document.getElementById('eliminate').addEventListener('click', search);
 	document.getElementById('playAgain').addEventListener('click', initializeGame);
 	document.getElementById('reveal').addEventListener('click', reveal);
 	selectWidth.addEventListener('change', loadWords);
