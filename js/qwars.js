@@ -237,7 +237,7 @@
 					player.moves.forEach(m => {
 						let match  = m.split('').filter((x,idx) => idx % 2 === 0);
 						let filler = m.split('').filter((x,idx) => idx % 2 === 1);
-						card += postAttempt(match, filler, '');
+						card += postAttempt(match, filler);
 					})
 					competition.innerHTML += `${card}</table></div>`;
 				})
