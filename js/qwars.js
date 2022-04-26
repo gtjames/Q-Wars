@@ -46,16 +46,16 @@
 	let keyBoard 		= document.querySelectorAll("#keyboard button")
 	keyBoard.forEach(key => key.addEventListener('touch',	readKeyboard));
 	keyBoard.forEach(key => key.addEventListener('click',	readKeyboard));
-	window.addEventListener						('keydown',	readKey);
+	window.addEventListener						('keydown',	readKeypress);
 
 	/**
 	 * 		add event listeners for keystroke and search events
 	 */
 	document.getElementById('newUser').addEventListener('click', newUser);
 	document.getElementById('eliminate').addEventListener('click', search);
-	selectWidth.addEventListener('change', loadWords);
 	document.getElementById('playAgain').addEventListener('click', initializeGame);
 	document.getElementById('reveal').addEventListener('click', reveal);
+	selectWidth.addEventListener('change', loadWords);
 
 	function loadWords(e) {
 		/**
@@ -120,16 +120,17 @@
 	 */
 
 	function readKeyboard(e) {
-		readKey( e.target.dataset.key );
+		keyEvent( e.target.dataset.key );
 	}
 
-	function readKey(e) {
+	function readKeypress(e) {
 		let key;
 		if 			(e.keyCode === 8 )	key = "BS";
 		else if 	(e.keyCode === 13)	key = "CR";
 		else  							key = String.fromCharCode(e.keyCode);
 		keyEvent(key);
 	}
+
 	function keyEvent(key) {
 		error.innerText = '';
 		const input = document.querySelectorAll(".guess");
