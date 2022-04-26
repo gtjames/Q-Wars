@@ -227,7 +227,7 @@
 			body: JSON.stringify({ "userName" : userName, "gameKey" : gameKey,})
 		})
 			.then(resp => resp.json())
-			.then((data) => console.log(data))
+			.then(data => document.getElementById('myMoves').innerText = data.userName)
 			.catch(err => console.log('Fetch Error :', err) );
 	}
 
