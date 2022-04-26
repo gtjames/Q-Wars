@@ -117,7 +117,7 @@
 	function readKey(e) {
 		error.innerText = '';
 		const input = document.querySelectorAll(".guess");
-		input.forEach(spot => item.classList.remove('nope'));
+		input.forEach(spot => spot.classList.remove('nope'));
 		if (e.keyCode === 13) {
 			if (guess.length !== width) {
 				error.innerText = `${guess}: doesn't have ${width} characters`;
@@ -125,7 +125,7 @@
 				//	check to see if the guessed word is a word
 				if ( fiveLetters.find(w => w === guess) !== guess) {
 					error.innerText = `${guess}: is not a valid word`;
-					input.forEach(spot => item.classList.add('nope'));
+					input.forEach(spot => spot.classList.add('nope'));
 				} else {
 					search();
 				}
