@@ -189,8 +189,8 @@
 	}
 
 	function showStats() {
-		let stats = '(un) ' + [...unused].join('|') + '<br>(cl) ';
-		close.map(c => stats + Array.from(c) + '_');
+		let stats = '(un) ' + [...unused] + '<br>(cl) ';
+		stats += close.map(c => Array.from(c)).join('|')
 		stats += '<br>(lk) ' + lock.join('|');
 		error.innerHTML = stats;
 	}
