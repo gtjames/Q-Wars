@@ -84,8 +84,12 @@
 		hiddenWord 	= selectRandomWord();
 		guess 		= '';
 		unused 		= new Set();
-		lock  		= '_'.repeat(guess.length).split('');
-		close 		= [new Set(),new Set(),new Set(),new Set(),new Set()];
+		lock  		= '_'.repeat(width).split('');
+		let set		= new Set();
+		close 		= [];
+		for (let i = 0; i < width; i++) {
+			close.push(set);
+		}
 		numOfTries	= 0;
 
 		error.innerText 		= '';
