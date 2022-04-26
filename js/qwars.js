@@ -40,7 +40,6 @@
 	let possibleWords 	= document.getElementById('possibleWords');
 	let error 			= document.getElementById('error');
 	let tryThis 		= document.getElementById('tryThis');
-	let progress 		= document.getElementById('progress');
 	let competition 	= document.getElementById('competition');
 	let selectWidth 	= document.getElementById('selectWidth');
 
@@ -92,7 +91,6 @@
 		error.innerText 		= '';
 		secretWord.innerHTML 	= `${hiddenWord}`;
 		userAttempts.innerHTML 	= '';
-		progress.innerHTML 		= '';
 		possibleWords.innerHTML = '';
 		tryThis.innerHTML 		= '';
 		const allKeys = document.querySelectorAll("div.row > button");
@@ -191,7 +189,7 @@
 		let stats = 'Un ' + [...unused].join('') + ' -> ';
 		close.map(c => stats + Array.from(c) + '_');
 		stats += ' -> ' + lock;
-		progress.innerHTML = stats;
+		error.innerText = stats;
 	}
 
 	/**
@@ -199,7 +197,6 @@
 	 * 			Add this attempt to the list of guessed words
 	 * @param match			_ - not found, e found at this position, c - found in the word but not here
 	 * @param userGuess		the word typed by the user
-	 * @param stats			hits and misses
 	 * @returns {string}	string with the formatted word of hits and misses
 	 */
 	function postAttempt(match, userGuess) {
