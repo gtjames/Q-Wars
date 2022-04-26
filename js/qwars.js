@@ -36,7 +36,6 @@
 	let numOfTries = 0;
 
 	let userAttempts 	= document.getElementById('userAttempts');
-	let secretWord 		= document.getElementById('secretWord');
 	let possibleWords 	= document.getElementById('possibleWords');
 	let error 			= document.getElementById('error');
 	let tryThis 		= document.getElementById('tryThis');
@@ -52,6 +51,7 @@
 	document.getElementById('eliminate').addEventListener('click', search);
 	selectWidth.addEventListener('change', loadWords);
 	document.getElementById('playAgain').addEventListener('click', initializeGame);
+	document.getElementById('reveal').addEventListener('click', reveal);
 	window.addEventListener('keydown', readKey);
 
 	function loadWords(e) {
@@ -92,7 +92,6 @@
 		numOfTries	= 0;
 
 		error.innerText 		= '';
-		secretWord.innerHTML 	= `${hiddenWord}`;
 		userAttempts.innerHTML 	= '';
 		possibleWords.innerHTML = '';
 		tryThis.innerHTML 		= '';
@@ -100,6 +99,11 @@
 		allKeys.forEach(key => key.className = '');
 		const guesses = document.querySelectorAll(".guess");
 		guesses.forEach(key => key.innerText = '');
+	}
+
+	function reveal() {
+		let secretWord		 = document.getElementById('secretWord');
+		secretWord.innerText = (secretWord.innerText.length === 0) ? hiddenWord : '';
 	}
 
 	/**
