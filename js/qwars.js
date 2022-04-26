@@ -193,9 +193,9 @@
 		findPossibles(lock);
 		userAttempts.innerHTML += postAttempt(match, guess)
 		makeAMove(match, guess);
-		for (let i = 0; i < width; i++) {
-			document.getElementById(i + "").innerText = '';
-		}
+		const guesses = document.querySelectorAll(".guess");
+		guesses.forEach(spot => spot.innerText = '');
+		guesses.forEach(spot => spot.classList.remove('round'));
 		guess = '';
 	}
 
