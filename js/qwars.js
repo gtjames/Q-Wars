@@ -131,14 +131,14 @@
 				}
 			}
 		} else if (e.keyCode === 8) {
-			document.getElementById(guess.length+ "").classList.toggle = 'round';
 			guess = guess.substr(0, guess.length - 1);
+			document.getElementById(guess.length+ "").classList.toggle('round');
 			document.getElementById(guess.length + "").innerText = '';
 		} else if ( e.keyCode >= 65 && e.keyCode <= 90 && guess.length < width ) {
 			let letter = String.fromCharCode(e.keyCode);
 			document.getElementById(guess.length + "").innerText = letter;
 			guess += letter;
-			document.getElementById(guess.length+ "").classList.toggle = 'round';
+			document.getElementById(guess.length+ "").classList.toggle('round');
 		}
 	}
 
