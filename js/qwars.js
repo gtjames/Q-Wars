@@ -116,6 +116,8 @@
 	 */
 	function readKey(e) {
 		error.innerText = '';
+		const input = document.querySelectorAll(".guess");
+		input.forEach(spot => item.classList.remove('nope'));
 		if (e.keyCode === 13) {
 			if (guess.length !== width) {
 				error.innerText = `${guess}: doesn't have ${width} characters`;
@@ -123,17 +125,20 @@
 				//	check to see if the guessed word is a word
 				if ( fiveLetters.find(w => w === guess) !== guess) {
 					error.innerText = `${guess}: is not a valid word`;
+					input.forEach(spot => item.classList.add('nope'));
 				} else {
 					search();
 				}
 			}
 		} else if (e.keyCode === 8) {
+			document.getElementById(guess.length+ "").classList.toggle = 'round';
 			guess = guess.substr(0, guess.length - 1);
 			document.getElementById(guess.length + "").innerText = '';
 		} else if ( e.keyCode >= 65 && e.keyCode <= 90 && guess.length < width ) {
 			let letter = String.fromCharCode(e.keyCode);
 			document.getElementById(guess.length + "").innerText = letter;
 			guess += letter;
+			document.getElementById(guess.length+ "").classList.toggle = 'round';
 		}
 	}
 
