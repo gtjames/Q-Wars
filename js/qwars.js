@@ -28,10 +28,10 @@
 	 * 		get references to all important page elements
 	 */
 
-	let fiveLetters, hiddenWord, unused, close, lock, guess, width;
+	let fiveLetters, hiddenWord, unused, close, lock, guess, width, gameOver;
 
 	let gameKey;
-	let userName = localStorage.getItem("userName");
+	let userName 		= localStorage.getItem("userName");
 	let timerId = -1;
 	let numOfTries = 0;
 
@@ -42,7 +42,6 @@
 	let competition 	= document.getElementById('competition');
 	let selectWidth 	= document.getElementById('selectWidth');
 
-	document.getElementById("userName").value = userName;
 	let keyBoard 		= document.querySelectorAll("#keyboard button")
 	keyBoard.forEach(key => key.addEventListener('touch',	readKeyboard));
 	keyBoard.forEach(key => key.addEventListener('click',	readKeyboard));
@@ -64,9 +63,7 @@
 		width = +e.target.value;		//	force width to be a number.
 		fetch(`https://raw.githubusercontent.com/gtjames/csv/master/Dictionaries/${width}Letters.txt`)
 			.then(resp => resp.text())
-			.then(words => {
-				fiveLetters = words.split('\n');
-			});
+			.then(words => fiveLetters = words.split('\n'));
 
 		let letters = document.getElementById('letters');
 		let text = '';
@@ -75,6 +72,7 @@
 		}
 		letters.innerHTML = text;
 		document.getElementById('0').addEventListener('click', showStats);
+		initializeGame();
 	}
 
 	/**
@@ -88,6 +86,7 @@
 		unused 		= new Set();
 		lock  		= '_'.repeat(width).split('');
 		close 		= [];
+		gameOver	= false;
 		for (let i = 0; i < width; i++) {
 			close.push(new Set());
 		}
@@ -137,16 +136,15 @@
 		if (key === 'CR') {
 			if (guess.length !== width) {
 				error.innerText = `${guess}: doesn't have ${width} characters`;
+			} else  if ( fiveLetters.find(w => w === guess) !== guess) {
+				error.innerText = `${guess}: is not a valid word`;
+				input.forEach(spot => spot.classList.add('nope'));
+			} else if (gameOver) {
+				error.innerText = `Game Over`;
 			} else {
-				//	check to see if the guessed word is a word
-				if ( fiveLetters.find(w => w === guess) !== guess) {
-					error.innerText = `${guess}: is not a valid word`;
-					input.forEach(spot => spot.classList.add('nope'));
-				} else {
-					search();
-				}
+				search();
 			}
-		} else if (key === "BS") {
+		} else if (key === "BS" && guess.length > 0) {
 			guess = guess.substr(0, guess.length - 1);
 			document.getElementById(guess.length + "").innerText = '';
 			document.getElementById(guess.length + "").classList.toggle('round');
@@ -158,9 +156,8 @@
 	}
 
 	function newUser() {
-		userName = document.getElementById("userName").value;
 		gameKey = document.getElementById("gameKey").value;
-		createGame(userName, gameKey);
+		createGame(gameKey);
 		if (timerId !== -1)
 			clearTimeout(timerId);
 
@@ -182,6 +179,7 @@
 			error.innerText = `You did it! You guessed: ${guess} in ${numOfTries} tries`;
 			userAttempts.innerHTML += postAttempt('x'.repeat(guess.length), guess)
 			makeAMove('x'.repeat(guess.length), guess);
+			gameOver = true
 			return;
 		}
 
@@ -235,7 +233,7 @@
 		return `<div class="row">${button}`;
 	}
 
-	function createGame(userName, gameKey) {
+	function createGame(gameKey) {
 		fetch("https://slcrbpag33.execute-api.us-west-1.amazonaws.com/prod", {
 			method: 'POST',
 			body: JSON.stringify({ "userName" : userName, "gameKey" : gameKey,})
@@ -244,6 +242,18 @@
 			.then(data => document.getElementById('myMoves').innerText = data.userName)
 			.catch(err => console.log('Fetch Error :', err) );
 	}
+
+	function inviteSomeoneToPlay(email, gameKey) {
+		let newWord = selectRandomWord();
+		fetch("https://slcrbpag33.execute-api.us-west-1.amazonaws.com/prod/invite", {
+			method: 'POST',
+			body: JSON.stringify({ "email" : email, "gameKey" : gameKey, "word": newWord })
+		})
+			.then(resp => resp.json())
+			.then(data => document.getElementById('myMoves').innerText = data.userName)
+			.catch(err => console.log('Fetch Error :', err) );
+	}
+
 
 	function getOtherMoves() {
 		fetch(`https://slcrbpag33.execute-api.us-west-1.amazonaws.com/prod?gameKey=${gameKey}`,	//	players
