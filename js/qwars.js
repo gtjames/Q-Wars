@@ -243,17 +243,16 @@
 			.catch(err => console.log('Fetch Error :', err) );
 	}
 
-	function inviteSomeoneToPlay(email, gameKey) {
+	function inviteSomeoneToPlay(emails, gameKey) {
 		let newWord = selectRandomWord();
 		fetch("https://slcrbpag33.execute-api.us-west-1.amazonaws.com/prod/invite", {
 			method: 'POST',
-			body: JSON.stringify({ "email" : email, "gameKey" : gameKey, "word": newWord })
+			body: JSON.stringify({ "email" : emails, "gameKey" : gameKey, "word": newWord })
 		})
 			.then(resp => resp.json())
 			.then(data => document.getElementById('myMoves').innerText = data.userName)
 			.catch(err => console.log('Fetch Error :', err) );
 	}
-
 
 	function getOtherMoves() {
 		fetch(`https://slcrbpag33.execute-api.us-west-1.amazonaws.com/prod?gameKey=${gameKey}`,	//	players
