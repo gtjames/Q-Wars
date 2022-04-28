@@ -13,9 +13,6 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 
-    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-    <link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-indigo.css" id="css" >
-
     <link rel="stylesheet" href="/css/qwars.css">
     <link rel="stylesheet" href="/css/message.css">
 
@@ -84,23 +81,25 @@
 </head>
 
 <body>
-<div class="info panel panel-default">
-    <div class="panel-heading">
-        <div class="dropdown">
-            <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Dropdown Example
-                <span class="caret"></span></button>
-            <ul class="dropdown-menu">
-                <li><button type="button" class="btn btn-default btn-lg" id="sendChallenge">Create a Challenge</button></li>
-            </ul>
-        </div>
+<div class="container">
+    <div class="info panel panel-default">
+        <div class="panel-heading">
+            <div class="dropdown">
+                <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Dropdown Example
+                    <span class="caret"></span></button>
+                <ul class="dropdown-menu">
+                    <li><button type="button" class="btn btn-default btn-lg" id="sendChallenge">Create a Challenge</button></li>
+                </ul>
+            </div>
 
-        <div class="dropdown">
-            <ul class="dropdown-menu">
-                <li><a id="myChallenge" href="#">Create a Challenge</a></li>
-            </ul>
+            <div class="dropdown">
+                <ul class="dropdown-menu">
+                    <li><a id="myChallenge" href="#">Create a Challenge</a></li>
+                </ul>
+            </div>
         </div>
+        <div class="panel-body"><ol id="updates"></ol></div>
     </div>
-    <div class="panel-body"><ol id="updates"></ol></div>
 </div>
 
 <div id="noApiMessage" class="configMessage" style="display: none;">
@@ -148,9 +147,9 @@
     <hr>
     <table><tr id="letters"></tr></table>
     <hr>
-    <div class="w3-col m4 l3 disney-card w3-theme-l1">
-        <div>
-            <h4 id="myMoves"></h4>
+    <div class="card" style="width: 18rem;">
+        <h4 id="myMoves" class="card-title"></h4>
+        <div class="card-body">
             <div id="userAttempts" class="keyboard"></div>
         </div>
     </div>
