@@ -18,8 +18,6 @@
 
     <link rel="stylesheet" href="/css/qwars.css">
     <link rel="stylesheet" href="/css/message.css">
-
-
     <head>
         <style>
             .modal-header, h4, .close {
@@ -85,7 +83,6 @@
 </head>
 
 <body>
-
 <div class="info panel panel-default">
     <div class="panel-heading">
         <div class="dropdown pull-right">
@@ -94,9 +91,9 @@
             </button>
             <ul class="dropdown-menu" aria-labelledby="accountLink">
                 <li><a id="signOut" href="#">Sign out</a></li>
-                <li><a id="challenge" href="#">Create a Challenge</a></li>
+                <li><a id="myChallenge" href="#">Create a Challenge</a></li>
                 <!-- Trigger the modal with a button -->
-                <li><button type="button" class="btn btn-default btn-lg" id="myBtn">Create a Challenge</button></li>
+                <li><button type="button" class="btn btn-default btn-lg" id="sendChallenge">Create a Challenge</button></li>
             </ul>
         </div>
     </div>
@@ -161,9 +158,8 @@
     <div id="competition"></div>
     <div id="keyboard">
         <div class="row"><button data-key="Q">Q</button><button data-key="W">W</button><button data-key="E">E</button><button data-key="R">R</button><button data-key="T">T</button><button data-key="Y">Y</button><button data-key="U">U</button><button data-key="I">I</button><button data-key="O">O</button><button data-key="P">P</button></div>
-        <div class="row"><div class="spacer half"></div><button data-key="A">A</button><button data-key="S">S</button><button data-key="D">D</button><button data-key="F">F</button><button data-key="G">G</button><button data-key="H">H</button><button data-key="J">J</button><button data-key="K">K</button><button data-key="L">L</button><button data-key="CR">&#8629;</button><</div>
-        <div class="row"><button data-key="Z">Z</button><button data-key="X">X</button><button data-key="C">C</button><button data-key="V">V</button><button data-key="B">B</button><button data-key="N">N</button><button data-key="M">M</button><button data-key="BS">Del</button>
-        </div>
+        <div class="row"><div class="spacer half"></div><button data-key="A">A</button><button data-key="S">S</button><button data-key="D">D</button><button data-key="F">F</button><button data-key="G">G</button><button data-key="H">H</button><button data-key="J">J</button><button data-key="K">K</button><button data-key="L">L</button><div class="spacer half"></div></div>
+        <div class="row"><button data-key="CR">&#8629;</button><button data-key="Z">Z</button><button data-key="X">X</button><button data-key="C">C</button><button data-key="V">V</button><button data-key="B">B</button><button data-key="N">N</button><button data-key="M">M</button><button data-key="BS">Del</button></div>
     </div>
     <p id="possibleWords"></p>
     <ul id="tryThis"></ul>
@@ -179,18 +175,19 @@
                 <div class="modal-header" style="padding:35px 50px;">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                     <h4><span class="glyphicon glyphicon-lock"></span> Who is up for a Challenge?</h4>
+                    <p id="gameError"></p>
                 </div>
                 <div class="modal-body" style="padding:40px 50px;">
                     <form role="form">
                         <div class="form-group">
-                            <label for="challengeKey"><span class="glyphicon glyphicon-user"></span> Game Name</label>
+                            <label for="challengeKey"><span class="glyphicon glyphicon-hand-right"></span> Game Name</label>
                             <input type="text" class="form-control" id="challengeKey" placeholder="Enter Game Name">
                         </div>
                         <div class="form-group">
-                            <label for="friends"><span class="glyphicon glyphicon-eye-open"></span> Password</label>
+                            <label for="friends"><span class="glyphicon glyphicon-envelope"></span> Send Invitations</label>
                             <textarea type="text" class="form-control" id="friends" placeholder="Enter emails"></textarea>
                         </div>
-                        <button type="submit" class="btn btn-success btn-block"><span class="glyphicon glyphicon-off"></span> Create Challenge</button>
+                        <button type="submit" id="verifyChallenge" class="btn btn-success btn-block"><span class="glyphicon glyphicon-off"></span> Create Challenge</button>
                     </form>
                 </div>
             </div>
@@ -207,8 +204,8 @@
 <script src="js/cognito-auth.js"></script>
 <script src="js/qwars.js"></script>
 <script>
-	$(document).ready(() => $("#myBtn").click(() => $("#myModal").modal()));
-	$(document).ready(() => $("#challenge").click(() => $("#myModal").modal()));
+	$(document).ready(() => $("#myChallenge").click(() => $("#myModal").modal()));
+	// $(document).ready(() => $("#sendChallenge").click(() => $("#myModal").modal()));
 </script>
 
 </body>
