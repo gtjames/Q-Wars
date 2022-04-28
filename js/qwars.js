@@ -77,40 +77,6 @@
 		initializeGame();
 	}
 
-	function sendChallenge() {
-		let error 			= document.getElementById("gameError");
-		let challengeKey 	= document.getElementById("challengeKey");
-		let friends 		= document.getElementById("friends");
-
-		let gameKey 	= challengeKey.value;
-		let friendList 	= friends.value;
-
-		if (gameKey.length === 0) {
-			error.innerHTML = `Please enter Game Name`;
-			return;
-		}
-		friendEmails = friendList.split(/(?:,| |\n)+/);
-		friendEmails = friendEmails.filter(f => f.length > 0);
-		let bad = friendEmails.filter(email => ! validateEmail(email));
-		if (bad.length > 0) {
-			error.innerHTML = `Please correct the poorly formed email addresses: ${bad.join(',')}`;
-		} else {
-			error.innerHTML = `Invites have been sent: ${friendEmails.join(',')}`;
-			// Set a timeout to hide the element again
-			setTimeout(() => {
-				friends.value = '';
-				error.innerHTML = '';
-				challengeKey.value = '';
-
-				$('#myModal').modal('toggle')
-			}, 6000);
-		}
-		// document.mailForm.mailText.focus();
-	}
-
-	function validateEmail(email) {
-		return email.match(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/);
-	}
 	/**
 	 * 		initializeGame
 	 * 			set up all game variables
@@ -283,15 +249,47 @@
 			.catch(err => console.log('Fetch Error :', err) );
 	}
 
-	function inviteSomeoneToPlay(emails, gameKey) {
-		let newWord = selectRandomWord();
-		fetch("https://slcrbpag33.execute-api.us-west-1.amazonaws.com/prod/invite", {
-			method: 'POST',
-			body: JSON.stringify({ "email" : emails, "gameKey" : gameKey, "word": newWord })
-		})
-			.then(resp => resp.json())
-			.then(data => document.getElementById('myMoves').innerText = data.userName)
-			.catch(err => console.log('Fetch Error :', err) );
+	function sendChallenge() {
+		let error 			= document.getElementById("gameError");
+		let challengeKey 	= document.getElementById("challengeKey");
+		let friends 		= document.getElementById("friends");
+
+		let gameKey 	= challengeKey.value;
+		let friendList 	= friends.value;
+
+		if (gameKey.length === 0) {
+			error.innerHTML = `Please enter Game Name`;
+			return;
+		}
+		friendEmails = friendList.split(/(?:,| |\n)+/);
+		friendEmails = friendEmails.filter(f => f.length > 0);
+		let bad = friendEmails.filter(email => ! validateEmail(email));
+		if (bad.length > 0) {
+			error.innerHTML = `Please correct the poorly formed email addresses: ${bad.join(',')}`;
+		} else {
+			let newWord = selectRandomWord();
+			fetch("https://slcrbpag33.execute-api.us-west-1.amazonaws.com/prod/invite", {
+				method: 'POST',
+				body: JSON.stringify({ "email" : [friendEmails], "gameKey" : gameKey, "word": newWord })
+			})
+				.then(resp => resp.json())
+				.then(data => document.getElementById('myMoves').innerText = data.userName)
+				.catch(err => console.log('Fetch Error :', err) );
+
+			error.innerHTML = `Invites have been sent: ${friendEmails.join(',')}`;
+			// Set a timeout to hide the element again
+			setTimeout(() => {
+				friends.value = '';
+				error.innerHTML = '';
+				challengeKey.value = '';
+
+				$('#myModal').modal('toggle')
+			}, 6000);
+		}
+	}
+
+	function validateEmail(email) {
+		return email.match(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/);
 	}
 
 	function getOtherMoves() {
