@@ -68,7 +68,6 @@
 		for (let l = 0; l < width; l++) {
 			text += `<td><button id="${l}" class="guess oneLetter"></button></td>`;
 		}
-		letters.innerHTML = text;
 		document.getElementById('0').addEventListener('click', showStats);
 		console.log(`0 - ${width}`);
 
@@ -188,7 +187,7 @@
 		//	did we guess the word?
 		if (guess === hiddenWord) {
 			error.innerText = `You did it! You guessed: ${guess} in ${numOfTries} tries`;
-			userAttempts.innerHTML += postAttempt('x'.repeat(guess.length), guess)
+			userAttempts.innerHTML += postAttempt('x'.repeat(guess.length), guess, 1)
 			makeAMove('x'.repeat(guess.length), guess);
 			gameOver = true
 			return;
@@ -213,8 +212,8 @@
 		}
 
 		//	let's see what words match our hits and misses so far
-		findPossibles(lock);
-		userAttempts.innerHTML += postAttempt(match, guess)
+		let howMany = findPossibles(lock);
+		userAttempts.innerHTML += postAttempt(match, guess, howMany)
 		makeAMove(match, guess);
 		const guesses = document.querySelectorAll(".guess");
 		guesses.forEach(spot => spot.innerText = '');
@@ -236,12 +235,12 @@
 	 * @param userGuess		the word typed by the user
 	 * @returns {string}	string with the formatted word of hits and misses
 	 */
-	function postAttempt(match, userGuess) {
+	function postAttempt(match, userGuess, howMany) {
 		let button ='';
 		for (let h = 0; h < width; h++) {
 			button += `<button class="${match[h]}">${userGuess[h]}</button>`;
 		}
-		return `<div class="row">${button}`;
+		return `<div class="row">${button}<button class="_">${howMany}</button`</div>`;
 	}
 
 	function createGame(gameKey) {
@@ -297,7 +296,7 @@
 	}
 
 	function validateEmail(email) {
-		return email.match(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/);
+		return email.match(/^\w+([\.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/);
 	}
 
 	function getOtherMoves() {
@@ -317,7 +316,7 @@
 					player.moves.forEach(m => {
 						let match  = m.split('').filter((x,idx) => idx % 2 === 0);
 						let filler = m.split('').filter((x,idx) => idx % 2 === 1);
-						card += postAttempt(match, filler);
+						card += postAttempt(match, filler, '');
 					})
 					competition.innerHTML += `${card}</table></div>`;
 				})
