@@ -274,10 +274,11 @@
 			error.innerHTML = `Please correct the poorly formed email addresses: ${bad.join(',')}`;
 		} else {
 			let newWord = selectRandomWord();
+			let body = { "email" : friendEmails, "gameKey" : gameKey, "word": newWord };
 			fetch("https://slcrbpag33.execute-api.us-west-1.amazonaws.com/prod/invite", {
 				method: 'POST',
 				headers: { Authorization: authToken },
-				body: JSON.stringify({ "email" : [friendEmails], "gameKey" : gameKey, "word": newWord })
+				body: JSON.stringify(body)
 			})
 				.then(resp => resp.json())
 				.then(data => document.getElementById('myMoves').innerText = data.userName)
