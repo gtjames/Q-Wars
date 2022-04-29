@@ -68,6 +68,7 @@
 		for (let l = 0; l < width; l++) {
 			text += `<td><button id="${l}" class="guess oneLetter"></button></td>`;
 		}
+		letters.innerHTML = text;
 		document.getElementById('0').addEventListener('click', showStats);
 		console.log(`0 - ${width}`);
 
@@ -233,6 +234,7 @@
 	 * 			Add this attempt to the list of guessed words
 	 * @param match			_ - not found, e found at this position, c - found in the word but not here
 	 * @param userGuess		the word typed by the user
+	 * @param howMany		show the number of possible guesses
 	 * @returns {string}	string with the formatted word of hits and misses
 	 */
 	function postAttempt(match, userGuess, howMany) {
@@ -266,7 +268,7 @@
 			error.innerHTML = `Please enter Game Name`;
 			return;
 		}
-		friendEmails = friendList.split(/(?:,| |\n)+/);
+		let friendEmails = friendList.split(/(?:,| |\n)+/);
 		friendEmails = friendEmails.filter(f => f.length > 0);
 		let bad = friendEmails.filter(email => ! validateEmail(email));
 		if (bad.length > 0) {
