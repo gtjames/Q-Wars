@@ -28,7 +28,7 @@
 	 * 		get references to all important page elements
 	 */
 
-	let fiveLetters, hiddenWord, unused, close, lock, guess, width, gameOver;
+	let fullList, hiddenWord, unused, close, lock, guess, width, gameOver;
 
 	let gameKey;
 	let userName 		= localStorage.getItem("userName");
@@ -41,6 +41,7 @@
 	let tryThis 		= document.getElementById('tryThis');
 	let competition 	= document.getElementById('competition');
 	let selectWidth 	= document.getElementById('selectWidth');
+	let letters 		= document.getElementById('letters');
 
 	let keyBoard 		= document.querySelectorAll("#keyboard button")
 	keyBoard.forEach(key => key.addEventListener('touch',	readKeyboard));
@@ -61,20 +62,24 @@
 		/**
 		 * 		read the list of five letter words
 		 */
-
 		width = +e.target.value;		//	force width to be a number.
-		fetch(`https://raw.githubusercontent.com/gtjames/csv/master/Dictionaries/${width}Letters.txt`)
-			.then(resp => resp.text())
-			.then(words => fiveLetters = words.split('\n'));
 
-		let letters = document.getElementById('letters');
 		let text = '';
 		for (let l = 0; l < width; l++) {
 			text += `<td><button id="${l}" class="guess oneLetter"></button></td>`;
 		}
 		letters.innerHTML = text;
 		document.getElementById('0').addEventListener('click', showStats);
-		initializeGame();
+		console.log(`0 - ${width}`);
+
+		fetch(`https://raw.githubusercontent.com/gtjames/csv/master/Dictionaries/${width}Letters.txt`)
+			.then(resp => resp.text())
+			.then(words => {
+				console.log('1');
+				fullList = words.split('\n');
+				initializeGame();
+			});
+		console.log('2');
 	}
 
 	/**
@@ -88,11 +93,12 @@
 		unused 		= new Set();
 		lock  		= '_'.repeat(width).split('');
 		close 		= [];
+		numOfTries	= 0;
 		gameOver	= false;
+
 		for (let i = 0; i < width; i++) {
 			close.push(new Set());
 		}
-		numOfTries	= 0;
 
 		error.innerText 		= '';
 		userAttempts.innerHTML 	= '';
@@ -118,7 +124,6 @@
 	 * 			A-Z	add to the guessed work
 	 * 		@param e		key event object
 	 */
-
 	function readKeyboard(e) {
 		keyEvent( e.target.dataset.key );
 	}
@@ -138,7 +143,7 @@
 		if (key === 'CR') {
 			if (guess.length !== width) {
 				error.innerText = `${guess}: doesn't have ${width} characters`;
-			} else  if ( fiveLetters.find(w => w === guess) !== guess) {
+			} else  if ( fullList.find(w => w === guess) !== guess) {
 				error.innerText = `${guess}: is not a valid word`;
 				input.forEach(spot => spot.classList.add('nope'));
 			} else if (gameOver) {
@@ -242,6 +247,7 @@
 	function createGame(gameKey) {
 		fetch("https://slcrbpag33.execute-api.us-west-1.amazonaws.com/prod", {
 			method: 'POST',
+			headers: { Authorization: authToken },
 			body: JSON.stringify({ "userName" : userName, "gameKey" : gameKey,})
 		})
 			.then(resp => resp.json())
@@ -270,6 +276,7 @@
 			let newWord = selectRandomWord();
 			fetch("https://slcrbpag33.execute-api.us-west-1.amazonaws.com/prod/invite", {
 				method: 'POST',
+				headers: { Authorization: authToken },
 				body: JSON.stringify({ "email" : [friendEmails], "gameKey" : gameKey, "word": newWord })
 			})
 				.then(resp => resp.json())
@@ -344,7 +351,7 @@
 	 * @returns {*}
 	 */
 	function selectRandomWord() {
-		return fiveLetters[Math.floor(Math.random() * fiveLetters.length)];
+		return fullList[Math.floor(Math.random() * fullList.length)];
 	}
 
 	/**
@@ -358,7 +365,7 @@
 	 * @returns {*}
 	 */
 	function findPossibles(lock) {
-		let possibles = fiveLetters;
+		let possibles = fullList;
 		//  eliminate all words that contain an unused letter
 		possibles = possibles.filter(w => {
 			for (let un of unused) {
