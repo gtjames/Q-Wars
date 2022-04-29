@@ -240,7 +240,7 @@
 	function postAttempt(match, userGuess, howMany) {
 		let button ='';
 		for (let h = 0; h < width; h++) {
-			button += `<button class="${match[h]} guess oneLetter">${userGuess[h]}</button>`;
+			button += `<button class="${match[h]} oneLetter">${userGuess[h]}</button>`;
 		}
 		return `<div class="row">${button}<button class="_">${howMany}</button></div>`;
 	}
