@@ -70,16 +70,13 @@
 		}
 		letters.innerHTML = text;
 		document.getElementById('0').addEventListener('click', showStats);
-		console.log(`0 - ${width}`);
 
 		fetch(`https://raw.githubusercontent.com/gtjames/csv/master/Dictionaries/${width}Letters.txt`)
 			.then(resp => resp.text())
 			.then(words => {
-				console.log('1');
 				fullList = words.split('\n');
 				initializeGame();
 			});
-		console.log('2');
 	}
 
 	/**
@@ -242,7 +239,7 @@
 		for (let h = 0; h < width; h++) {
 			button += `<button class="${match[h]} oneLetter">${userGuess[h]}</button>`;
 		}
-		return `<div class="row">${button}<button class="_">${howMany}</button></div>`;
+		return `<div class="row">${button}<button class="x pad">${howMany}</button></div>`;
 	}
 
 	function createGame(gameKey) {

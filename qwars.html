@@ -20,6 +20,7 @@
                 font-size: 30px;
             }
 
+        .pad {padding-left: 10px;;}
         .x {background-color: gold; color: black;}
         .e {background-color: green;}
         .c {background-color: palegoldenrod; color: black;}
@@ -47,6 +48,10 @@
             margin: 0 auto 8px;
         }
 
+        .moves {
+            width: 32rem;
+        }
+
         button {
             font-size: 30px;
             font-family: inherit;
@@ -60,7 +65,6 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            text-transform: uppercase;
         }
 
         .oneLetter {
@@ -133,7 +137,7 @@
     <hr>
     <table><tr id="letters"></tr></table>
     <hr>
-    <div class="card" style="width: 18rem;">
+    <div class="card moves">
         <h4 id="myMoves" class="card-title"></h4>
         <div class="card-body">
             <div id="userAttempts" class="keyboard"></div>
