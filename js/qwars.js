@@ -140,7 +140,7 @@
 		if (key === 'CR') {
 			if (guess.length !== width) {
 				error.innerText = `${guess}: doesn't have ${width} characters`;
-			} else  if ( fullList.find(w => w === guess) !== guess) {
+			} else if ( fullList.find(w => w === guess) !== guess) {
 				error.innerText = `${guess}: is not a valid word`;
 				input.forEach(spot => spot.classList.add('nope'));
 			} else if (gameOver) {
@@ -156,12 +156,15 @@
 			}
 		} else if ( key >= 'A' && key <= 'Z' ) {
 			if (guess.length < width ) {
-			document.getElementById(guess.length + "").innerText = key;
-			document.getElementById(guess.length + "").classList.toggle('round');
-			guess += key;
+				document.getElementById(guess.length + "").innerText = key;
+				document.getElementById(guess.length + "").classList.toggle('round');
+				guess += key;
+			} else {
+				error.innerText = `${guess}: is not a valid word`;
+				input.forEach(spot => spot.classList.add('nope'));
+			}
 		}
 	}
-}
 
 	function newUser() {
 		gameKey = document.getElementById("gameKey").value;
