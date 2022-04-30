@@ -159,7 +159,7 @@
 				document.getElementById(guess.length + "").innerText = key;
 				document.getElementById(guess.length + "").classList.toggle('round');
 				guess += key;
-				if (guess.length === width) {
+				if (guess.length === width &&	 fullList.find(w => w === guess) !== guess) {
 					error.innerText = `${guess}: is not a valid word`;
 					input.forEach(spot => spot.classList.add('nope'));
 				}
