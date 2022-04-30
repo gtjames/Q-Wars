@@ -159,9 +159,10 @@
 				document.getElementById(guess.length + "").innerText = key;
 				document.getElementById(guess.length + "").classList.toggle('round');
 				guess += key;
-			} else {
-				error.innerText = `${guess}: is not a valid word`;
-				input.forEach(spot => spot.classList.add('nope'));
+				if (guess.length === width) {
+					error.innerText = `${guess}: is not a valid word`;
+					input.forEach(spot => spot.classList.add('nope'));
+				}
 			}
 		}
 	}
