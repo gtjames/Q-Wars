@@ -242,7 +242,7 @@
 		for (let h = 0; h < width; h++) {
 			button += `<button class="${match[h]} oneLetter">${userGuess[h]}</button>`;
 		}
-		return `<div class="row">${button}<button class="x pad">${howMany}</button></div>`;
+		return `<div class="row">${button}<button class="x margin">${howMany}</button></div>`;
 	}
 
 	function createGame(gameKey) {
