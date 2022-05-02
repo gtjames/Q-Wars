@@ -325,11 +325,24 @@
 			.catch(err => console.log('Fetch Error :', err) );
 	}
 
-	function myActiveGames(userName) {
+	function myActiveGames(match, attempt) {
+		//       fetch("https://slcrbpag33.execute-api.us-west-1.amazonaws.com/prod", {
+		fetch(_config.api.invokeUrl+'/players', {
+			method: 'PUT',
+			headers: { Authorization: authToken },
+			body: JSON.stringify({ email : userName, userName : userName, gameKey: gameKey }),
+			contentType: 'application/json',
+		})
+			.then(resp => resp.json())
+			.then((result) => completeRequest(result))
+			.catch(err => console.log('Fetch Error :', err) );
+	}
+
+	function myActiveGames2(userName) {
 		fetch(_config.api.invokeUrl+`/?email=${userName}`, {
-			mode: 'no-cors'
+			mode: 'no-cors',
 			// headers: { Authorization: authToken }
-			// contentType: 'application/json',
+			contentType: 'application/json',
 		})
 			.then(resp => resp.text())
 			.then(result => {
