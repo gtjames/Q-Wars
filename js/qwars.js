@@ -327,10 +327,9 @@
 
 	function myActiveGames(userName) {
 		//       fetch("https://slcrbpag33.execute-api.us-west-1.amazonaws.com/prod", {
-		fetch(_config.api.invokeUrl, {
-			headers: { Authorization: authToken },
-			body: JSON.stringify({ userName : userName}),
-			contentType: 'application/json',
+		fetch(_config.api.invokeUrl+`email=${userName}`, {
+			headers: { Authorization: authToken }
+			// contentType: 'application/json',
 		})
 			.then(resp => resp.json())
 			.then(result => {
