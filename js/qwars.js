@@ -81,6 +81,9 @@
 			});
 	}
 
+function validateEmail(email) {
+	return email.match(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/);
+}
 	/**
 	 * 		initializeGame
 	 * 			set up all game variables
