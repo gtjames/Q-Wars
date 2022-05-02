@@ -81,9 +81,10 @@
 			});
 	}
 
-function validateEmail(email) {
-	return email.match(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/);
-}
+	function validateEmail(email) {
+		return email.match(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/);
+	}
+
 	/**
 	 * 		initializeGame
 	 * 			set up all game variables
@@ -303,10 +304,6 @@ function validateEmail(email) {
 		}
 	}
 
-	function validateEmail(email) {
-		return email.match(/^\w+([\.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/);
-	}
-
 	function getOtherMoves() {
 		fetch(`https://slcrbpag33.execute-api.us-west-1.amazonaws.com/prod?email=${userName}`)
 			.then(resp => resp.json())
@@ -336,7 +333,8 @@ function validateEmail(email) {
 		})
 			.then(resp => resp.text())
 			.then(result => {
-				console.log(result);
+				console.log('anything? -> ' + result);
+				if (result.length === 0) return
 				result = JSON.parse(result);
 				let options = '';
 				result.forEach(g => options += `<options value="${g.gameKey}-${g.word}">${g.gameKey}</options>` )
