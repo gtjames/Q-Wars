@@ -326,14 +326,15 @@
 	}
 
 	function myActiveGames(userName) {
-		//       fetch("https://slcrbpag33.execute-api.us-west-1.amazonaws.com/prod", {
 		fetch(_config.api.invokeUrl+`/?email=${userName}`, {
 			mode: 'no-cors'
 			// headers: { Authorization: authToken }
 			// contentType: 'application/json',
 		})
-			.then(resp => resp.json())
+			.then(resp => resp.text())
 			.then(result => {
+				console.log(result);
+				result = JSON.parse(result);
 				let options = '';
 				result.forEach(g => options += `<options value="${g.gameKey}-${g.word}">${g.gameKey}</options>` )
 				document.getElementById('gameKey').innerHTML = options;
