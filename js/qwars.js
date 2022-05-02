@@ -47,6 +47,7 @@
 	keyBoard.forEach(key => key.addEventListener('touch',	readKeyboard));
 	keyBoard.forEach(key => key.addEventListener('click',	readKeyboard));
 	window.addEventListener						('keydown',	readKeypress);
+	myActiveGames(userName);
 
 	/**
 	 * 		add event listeners for keystroke and search events
@@ -303,11 +304,7 @@
 	}
 
 	function getOtherMoves() {
-		fetch(`https://slcrbpag33.execute-api.us-west-1.amazonaws.com/prod?gameKey=${gameKey}`,	//	players
-			{
-				method: "GET",
-				// body: JSON.stringify({"gameKey": gameKey})
-			})
+		fetch(`https://slcrbpag33.execute-api.us-west-1.amazonaws.com/prod?email=${userName}`)
 			.then(resp => resp.json())
 			.then(games => {
 				let allPlayers = games.filter(p => p.userName !== userName && p.moves.length > 0);
@@ -323,6 +320,22 @@
 					})
 					competition.innerHTML += `${card}</table></div>`;
 				})
+			})
+			.catch(err => console.log('Fetch Error :', err) );
+	}
+
+	function myActiveGames(userName) {
+		//       fetch("https://slcrbpag33.execute-api.us-west-1.amazonaws.com/prod", {
+		fetch(_config.api.invokeUrl, {
+			headers: { Authorization: authToken },
+			body: JSON.stringify({ userName : userName}),
+			contentType: 'application/json',
+		})
+			.then(resp => resp.json())
+			.then(result => {
+				let options = '';
+				result.forEach(g => options += `<options value="${g.gameKey}-${g.word}">${g.gameKey}</options>` )
+				document.getElementById('gameKey').innerHTML = options;
 			})
 			.catch(err => console.log('Fetch Error :', err) );
 	}
