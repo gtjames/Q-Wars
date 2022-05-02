@@ -328,7 +328,8 @@
 	function myActiveGames(userName) {
 		//       fetch("https://slcrbpag33.execute-api.us-west-1.amazonaws.com/prod", {
 		fetch(_config.api.invokeUrl+`/?email=${userName}`, {
-			headers: { Authorization: authToken }
+			mode: 'no-cors'
+			// headers: { Authorization: authToken }
 			// contentType: 'application/json',
 		})
 			.then(resp => resp.json())
