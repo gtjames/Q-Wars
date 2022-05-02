@@ -47,7 +47,6 @@
 	keyBoard.forEach(key => key.addEventListener('touch',	readKeyboard));
 	keyBoard.forEach(key => key.addEventListener('click',	readKeyboard));
 	window.addEventListener						('keydown',	readKeypress);
-	myActiveGames(userName);
 
 	/**
 	 * 		add event listeners for keystroke and search events
@@ -56,6 +55,8 @@
 	document.getElementById('playAgain').addEventListener('click', initializeGame);
 	document.getElementById('reveal').addEventListener('click', reveal);
 	document.getElementById('verifyChallenge').addEventListener('click', sendChallenge);
+	document.getElementById('gameKey').addEventListener('change', newUser)
+	myActiveGames(userName);
 
 	selectWidth.addEventListener('change', loadWords);
 
