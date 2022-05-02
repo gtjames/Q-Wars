@@ -333,7 +333,8 @@
 		})
 			.then(resp => resp.text())
 			.then(result => {
-				console.log('anything? -> ' + result);
+				console.log(_config.api.invokeUrl+`/?email=${userName}`);
+				console.log(userName + ': anything? -> ' + result);
 				if (result.length === 0) return
 				result = JSON.parse(result);
 				let options = '';
