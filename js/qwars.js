@@ -327,8 +327,8 @@
 
 	function myActiveGames(match, attempt) {
 		//       fetch("https://slcrbpag33.execute-api.us-west-1.amazonaws.com/prod", {
-		fetch(_config.api.invokeUrl+'/players', {
-			method: 'PUT',
+		fetch(_config.api.invokeUrl+'/myGames', {
+			method: 'POST',
 			headers: { Authorization: authToken },
 			body: JSON.stringify({ email : userName, userName : userName, gameKey: gameKey }),
 			contentType: 'application/json',
