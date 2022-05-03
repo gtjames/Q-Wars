@@ -329,6 +329,7 @@
 		//       fetch("https://slcrbpag33.execute-api.us-west-1.amazonaws.com/prod", {
 		fetch(_config.api.invokeUrl+'/myGames', {
 			method: 'POST',
+			mode: 'no-cors',
 			headers: { Authorization: authToken },
 			body: JSON.stringify({ email : userName, userName : userName, gameKey: gameKey }),
 			contentType: 'application/json',
