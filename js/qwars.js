@@ -30,7 +30,7 @@
 
 	let fullList, hiddenWord, unused, close, lock, guess, width, gameOver;
 
-	let gameKey = 'game?';
+	let gameKey = 'gameA';
 	let userName 		= localStorage.getItem("userName");
 	let timerId = -1;
 	let numOfTries = 0;
