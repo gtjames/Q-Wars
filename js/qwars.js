@@ -55,27 +55,26 @@
 	document.getElementById('reveal').addEventListener('click', reveal);
 	document.getElementById('verifyChallenge').addEventListener('click', sendChallenge);
 	document.getElementById('gameKey').addEventListener('change', newGame)
-	myActiveGames(userName);		//	load my active games
-	readWordFile(5);				//	default to the five letter word list
-
 	selectWidth.addEventListener('change', loadWords);
+	readWordFile(5);				//	default to the five letter word list
+	myActiveGames(userName);		//	load my active games
 
 	function loadWords(e) {
 		/**
 		 * 		read the list of five letter words
 		 */
-		width = +e.target.value;		//	force width to be a number.
+		readWordFile(+e.target.value);				//	force width to be a number.
+	}
 
+	function readWordFile(wordSize) {
+		width = wordSize;
 		let text = '';
 		for (let l = 0; l < width; l++) {
 			text += `<td><button id="${l}" class="guess oneLetter"></button></td>`;
 		}
 		letters.innerHTML = text;
 		document.getElementById('0').addEventListener('click', showStats);
-		readWordFile(width);
-	}
 
-	function readWordFile(width) {
 		fetch(`https://raw.githubusercontent.com/gtjames/csv/master/Dictionaries/${width}Letters.txt`)
 			.then(resp => resp.text())
 			.then(words => {
