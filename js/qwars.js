@@ -51,12 +51,12 @@
 	/**
 	 * 		add event listeners for keystroke and search events
 	 */
-	document.getElementById('newUser').addEventListener('click', newUser);
 	document.getElementById('playAgain').addEventListener('click', initializeGame);
 	document.getElementById('reveal').addEventListener('click', reveal);
 	document.getElementById('verifyChallenge').addEventListener('click', sendChallenge);
-	document.getElementById('gameKey').addEventListener('change', newUser)
-	myActiveGames(userName);
+	document.getElementById('gameKey').addEventListener('change', newGame)
+	myActiveGames(userName);		//	load my active games
+	readWordFile(5);				//	default to the five letter word list
 
 	selectWidth.addEventListener('change', loadWords);
 
@@ -72,7 +72,10 @@
 		}
 		letters.innerHTML = text;
 		document.getElementById('0').addEventListener('click', showStats);
+		readWordFile(width);
+	}
 
+	function readWordFile(width) {
 		fetch(`https://raw.githubusercontent.com/gtjames/csv/master/Dictionaries/${width}Letters.txt`)
 			.then(resp => resp.text())
 			.then(words => {
@@ -173,8 +176,9 @@
 		}
 	}
 
-	function newUser() {
+	function newGame() {
 		gameKey = document.getElementById("gameKey").value;
+		if (gameKey.length === 0) 	gameKey = 'GameZ'
 		createGame(gameKey);
 		if (timerId !== -1)
 			clearTimeout(timerId);
@@ -230,8 +234,9 @@
 	}
 
 	function showStats() {
-		let stats = '(un) ' + [...unused] + '<br>(cl) ';
-		stats += close.map(c => Array.from(c)).join('|')
+		let stats;
+		stats  = '(un) ' + [...unused];
+		stats += '<br>(cl) ' + close.map(c => Array.from(c)).join('|')
 		stats += '<br>(lk) ' + lock.join('|');
 		error.innerHTML = stats;
 	}
