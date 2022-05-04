@@ -9,17 +9,11 @@
 		if (token) 	{
 			authToken = token;
 			console.log(`You are authenticated. Your token is: ${token}`);
-			userName = 'jamesga@byui.edu';
-			gameKey = 'gameA1';
-			createGame(gameKey);
-			readWordFile(5);				//	default to the five letter word list
-			myActiveGames();				//	load my active games
-			sendInvites([userName, 'gary.jaems@unt.edu','gtjames@gmail.com'], gameKey)
 		}
 		else {
 		//	window.location.href = '/signin.html';
 		}
-	}).catch(error => window.location.href = '/signin.html');
+	}).catch(error => console.log(JSON.stringify(error)));	// window.location.href = '/signin.html');
 
 	/**
 	 * 		declare all game variables
@@ -93,6 +87,16 @@
 	 * 			and select the next hidden word
 	 */
 	function initializeGame() {
+		let x = true;
+		if(x) {
+			userName = 'jamesga@byui.edu';
+			gameKey = 'gameA1';
+			createGame(gameKey);
+			readWordFile(5);				//	default to the five letter word list
+			myActiveGames();				//	load my active games
+			sendInvites([userName, 'gary.jaems@unt.edu','gtjames@gmail.com'], gameKey)
+		}
+
 		hiddenWord 	= selectRandomWord();
 		guess 		= '';
 		unused 		= new Set();
