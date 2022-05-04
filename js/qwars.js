@@ -277,7 +277,7 @@
 		fetch('https://slcrbpag33.execute-api.us-west-1.amazonaws.com/prod', {
 			method: 'POST',
 			headers: { Authorization: authToken },
-			body: JSON.stringify({ 'userName' : userName, 'gameKey' : gameKey,})
+			body: JSON.stringify({ 'userName' : userName, 'gameKey' : gameKey})
 		})
 			.then(resp => resp.json())
 			.then(data => {
