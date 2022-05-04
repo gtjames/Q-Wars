@@ -17,7 +17,7 @@
 			sendInvites([userName, 'gary.jaems@unt.edu','gtjames@gmail.com'], gameKey)
 		}
 		else {
-			window.location.href = '/signin.html';
+		//	window.location.href = '/signin.html';
 		}
 	}).catch(error => window.location.href = '/signin.html');
 
