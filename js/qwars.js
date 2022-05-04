@@ -56,7 +56,7 @@
 	document.getElementById('reveal').addEventListener('click', reveal);
 	document.getElementById('verifyChallenge').addEventListener('click', sendChallenge);
 	document.getElementById('gameKey').addEventListener('change', newGame)
-	document.getElementById('#myChallenge').addEventListener('click', () => myModal.modal());
+	document.getElementById('myChallenge').addEventListener('click', () => myModal.modal());
 	// $(document).ready(() => $("#sendChallenge").click(() => $("#myModal").modal()));
 	selectWidth.addEventListener('change', loadWords);
 
@@ -375,14 +375,22 @@
 		}, true)
 			// .then(resp => resp.json())
 			.then(resp => resp.text())
-			.then(result => completeRequest(result))
+			.then(result => {
+				completeRequest(result);
+				console.log(_config.api.invokeUrl+`/?email=${userName}`);
+				console.log(userName + ': anything? -> ' + result);
+				if (result.length === 0) return
+				result = JSON.parse(result);
+				let options = `<option value='gameA-JUMPY'>gameA</option><option value='gameB-LITTLE'>gameB</option>`;
+				result.forEach(g => options += `<option value='${g.gameKey}-${g.word}'>${g.gameKey}</option>` )
+				document.getElementById('gameKey').innerHTML = options;
+			})
 			.catch(err => console.log('Fetch Error :', err) );
 	}
 
 	function myActiveGames2(userName) {
 		fetch(_config.api.invokeUrl+`/?email=${userName}`, {
-			mode: 'no-cors',
-			// headers: { Authorization: authToken }
+			headers: { Authorization: authToken },
 			contentType: 'application/json',
 		})
 			.then(resp => resp.text())
