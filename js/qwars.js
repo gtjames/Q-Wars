@@ -175,10 +175,19 @@
 		}
 	}
 
+	/**
+	 * 	newGame
+	 * 		the user selected an active game from the gameKey dropdown list
+	 * 			we will use this game key to periodically request
+	 * 			what the moves look like for our other players
+	 *
+	 * 		called when the list of active games is updated
+	 */
 	function newGame() {
-		gameKey = document.getElementById('gameKey').value;
-		if (gameKey.length === 0) 	gameKey = 'GameZ'
-		createGame(gameKey);
+		let newGameKey = document.getElementById('gameKey').value;
+		newGameKey = (newGameKey.length === 0) ? 'GameZ' : newGameKey.split('-')[0];
+
+		createGame(newGameKey);
 		if (timerId !== -1)
 			clearTimeout(timerId);
 
@@ -256,6 +265,11 @@
 		return `<div class='row'>${button}<button class='x margin'>${howMany}</button></div>`;
 	}
 
+	/**
+	 * 		createGame
+	 * 			get all players in this game with their moves to date
+	 * @param gameKey
+	 */
 	function createGame(gameKey) {
 		fetch('https://slcrbpag33.execute-api.us-west-1.amazonaws.com/prod', {
 			method: 'POST',
@@ -264,12 +278,19 @@
 		})
 			.then(resp => resp.json())
 			.then(data => {
-				let playerName = data.userName.split('-')[0];
-				document.getElementById('myMoves').innerText = playerName;
+				console.log(JSON.stringify(data));
+				document.getElementById('myMoves').innerText = userName;
 			})
 			.catch(err => console.log('Fetch Error :', err) );
 	}
 
+	/**
+	 * 		sendChallenge
+	 * 			define a game name and send invites to a list of friends
+	 * 			then you can watch how they progress through solving the word
+	 *
+	 * 		called when the create game modal is dismissed
+	 */
 	function sendChallenge() {
 		let error 			= document.getElementById('gameError');
 		let challengeKey 	= document.getElementById('challengeKey');
@@ -333,6 +354,13 @@
 			.catch(err => console.log('Fetch Error :', err) );
 	}
 
+	/**
+	 * 		myActiveGames
+	 * 			which games am I currently working on?
+	 * 			this data will populate the dropdown list
+	 *
+	 * 		called at page load
+	 */
 	function myActiveGames() {
 		//       fetch('https://slcrbpag33.execute-api.us-west-1.amazonaws.com/prod', {
 		fetch(_config.api.invokeUrl+'/myGames', {
