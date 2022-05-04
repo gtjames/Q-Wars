@@ -93,7 +93,7 @@
 		if(x === 'A')  createGame(gameKey);
 		if(x === 'B')  myActiveGames();				//	load my active games
 		if(x === 'C')  sendInvites([userName, 'gary.james@unt.edu','gtjames@gmail.com'], gameKey)
-		if(x === 'D')  getOtherMovesfetch();
+		if(x === 'D')  getOtherMoves();
 
 		hiddenWord 	= selectRandomWord();
 		guess 		= '';
