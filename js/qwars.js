@@ -94,6 +94,7 @@
 		if(x === 'B')  myActiveGames();				//	load my active games
 		if(x === 'C')  sendInvites([userName, 'gary.james@unt.edu','gtjames@gmail.com'], gameKey)
 		if(x === 'D')  getOtherMoves();
+		if(x === 'E')  makeAMove(['_','_','_','_','_'],['S','M','A','R','T']);
 
 		hiddenWord 	= selectRandomWord();
 		guess 		= '';
