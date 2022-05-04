@@ -31,7 +31,7 @@
 	let fullList, hiddenWord, unused, close, lock, guess, width, gameOver;
 
 	let gameKey = 'gameA';
-	let userName 		= localStorage.getItem("userName");
+	let userName 		= localStorage.getItem('userName');
 	let timerId = -1;
 	let numOfTries = 0;
 
@@ -43,7 +43,7 @@
 	let selectWidth 	= document.getElementById('selectWidth');
 	let letters 		= document.getElementById('letters');
 
-	let keyBoard 		= document.querySelectorAll("#keyboard button")
+	let keyBoard 		= document.querySelectorAll('#keyboard button')
 	keyBoard.forEach(key => key.addEventListener('touch',	readKeyboard));
 	keyBoard.forEach(key => key.addEventListener('click',	readKeyboard));
 	window.addEventListener						('keydown',	readKeypress);
@@ -70,7 +70,7 @@
 		width = wordSize;
 		let text = '';
 		for (let l = 0; l < width; l++) {
-			text += `<td><button id="${l}" class="guess oneLetter"></button></td>`;
+			text += `<td><button id='${l}' class='guess oneLetter'></button></td>`;
 		}
 		letters.innerHTML = text;
 		document.getElementById('0').addEventListener('click', showStats);
@@ -109,9 +109,9 @@
 		userAttempts.innerHTML 	= '';
 		possibleWords.innerHTML = '';
 		tryThis.innerHTML 		= '';
-		const allKeys = document.querySelectorAll("div.row > button");
+		const allKeys = document.querySelectorAll('div.row > button');
 		allKeys.forEach(key => key.className = '');
-		const guesses = document.querySelectorAll(".guess");
+		const guesses = document.querySelectorAll('.guess');
 		guesses.forEach(spot => spot.innerText = '');
 		guesses.forEach(spot => spot.classList.remove('round'));
 	}
@@ -135,15 +135,15 @@
 
 	function readKeypress(e) {
 		let key;
-		if 			(e.keyCode === 8 )	key = "BS";
-		else if 	(e.keyCode === 13)	key = "CR";
+		if 			(e.keyCode === 8 )	key = 'BS';
+		else if 	(e.keyCode === 13)	key = 'CR';
 		else  							key = String.fromCharCode(e.keyCode);
 		keyEvent(key);
 	}
 
 	function keyEvent(key) {
 		error.innerText = '';
-		const input = document.querySelectorAll(".guess");
+		const input = document.querySelectorAll('.guess');
 		input.forEach(spot => spot.classList.remove('nope'));
 		if (key === 'CR') {
 			if (guess.length !== width) {
@@ -156,16 +156,16 @@
 			} else {
 				search();
 			}
-		} else if (key === "BS") {
+		} else if (key === 'BS') {
 			if ( guess.length > 0) {
 			guess = guess.substr(0, guess.length - 1);
-			document.getElementById(guess.length + "").innerText = '';
-			document.getElementById(guess.length + "").classList.toggle('round');
+			document.getElementById(guess.length + '').innerText = '';
+			document.getElementById(guess.length + '').classList.toggle('round');
 			}
 		} else if ( key >= 'A' && key <= 'Z' ) {
 			if (guess.length < width ) {
-				document.getElementById(guess.length + "").innerText = key;
-				document.getElementById(guess.length + "").classList.toggle('round');
+				document.getElementById(guess.length + '').innerText = key;
+				document.getElementById(guess.length + '').classList.toggle('round');
 				guess += key;
 				if (guess.length === width &&	 fullList.find(w => w === guess) !== guess) {
 					error.innerText = `${guess}: is not a valid word`;
@@ -176,7 +176,7 @@
 	}
 
 	function newGame() {
-		gameKey = document.getElementById("gameKey").value;
+		gameKey = document.getElementById('gameKey').value;
 		if (gameKey.length === 0) 	gameKey = 'GameZ'
 		createGame(gameKey);
 		if (timerId !== -1)
@@ -226,7 +226,7 @@
 		let howMany = findPossibles(lock);
 		userAttempts.innerHTML += postAttempt(match, guess, howMany)
 		makeAMove(match, guess);
-		const guesses = document.querySelectorAll(".guess");
+		const guesses = document.querySelectorAll('.guess');
 		guesses.forEach(spot => spot.innerText = '');
 		guesses.forEach(spot => spot.classList.remove('round'));
 		guess = '';
@@ -251,16 +251,16 @@
 	function postAttempt(match, userGuess, howMany) {
 		let button ='';
 		for (let h = 0; h < width; h++) {
-			button += `<button class="${match[h]} oneLetter">${userGuess[h]}</button>`;
+			button += `<button class='${match[h]} oneLetter'>${userGuess[h]}</button>`;
 		}
-		return `<div class="row">${button}<button class="x margin">${howMany}</button></div>`;
+		return `<div class='row'>${button}<button class='x margin'>${howMany}</button></div>`;
 	}
 
 	function createGame(gameKey) {
-		fetch("https://slcrbpag33.execute-api.us-west-1.amazonaws.com/prod", {
+		fetch('https://slcrbpag33.execute-api.us-west-1.amazonaws.com/prod', {
 			method: 'POST',
 			headers: { Authorization: authToken },
-			body: JSON.stringify({ "userName" : userName, "gameKey" : gameKey,})
+			body: JSON.stringify({ 'userName' : userName, 'gameKey' : gameKey,})
 		})
 			.then(resp => resp.json())
 			.then(data => document.getElementById('myMoves').innerText = data.userName)
@@ -268,9 +268,9 @@
 	}
 
 	function sendChallenge() {
-		let error 			= document.getElementById("gameError");
-		let challengeKey 	= document.getElementById("challengeKey");
-		let friends 		= document.getElementById("friends");
+		let error 			= document.getElementById('gameError');
+		let challengeKey 	= document.getElementById('challengeKey');
+		let friends 		= document.getElementById('friends');
 
 		let gameKey 	= challengeKey.value;
 		let friendList 	= friends.value;
@@ -286,8 +286,8 @@
 			error.innerHTML = `Please correct the poorly formed email addresses: ${bad.join(',')}`;
 		} else {
 			let newWord = selectRandomWord();
-			let body = { "email" : friendEmails, "gameKey" : gameKey, "word": newWord };
-			fetch("https://slcrbpag33.execute-api.us-west-1.amazonaws.com/prod/invite", {
+			let body = { 'email' : friendEmails, 'gameKey' : gameKey, 'word': newWord };
+			fetch('https://slcrbpag33.execute-api.us-west-1.amazonaws.com/prod/invite', {
 				method: 'POST',
 				headers: { Authorization: authToken },
 				body: JSON.stringify(body)
@@ -315,7 +315,7 @@
 				let allPlayers = games.filter(p => p.userName !== userName && p.moves.length > 0);
 				competition.innerHTML = '';
 				allPlayers.forEach(player => {
-					let card = `<div class="w3-col m4 l3 disney-card w3-theme-d1">
+					let card = `<div class='w3-col m4 l3 disney-card w3-theme-d1'>
 									<h4>${player.userName}</h4>
 									<table>`;
 					player.moves.forEach(m => {
@@ -330,7 +330,7 @@
 	}
 
 	function myActiveGames(match, attempt) {
-		//       fetch("https://slcrbpag33.execute-api.us-west-1.amazonaws.com/prod", {
+		//       fetch('https://slcrbpag33.execute-api.us-west-1.amazonaws.com/prod', {
 		fetch(_config.api.invokeUrl+'/myGames', {
 			method: 'POST',
 			// mode: 'no-cors',
@@ -356,8 +356,8 @@
 				console.log(userName + ': anything? -> ' + result);
 				if (result.length === 0) return
 				result = JSON.parse(result);
-				let options = '';
-				result.forEach(g => options += `<options value="${g.gameKey}-${g.word}">${g.gameKey}</options>` )
+				let options = `<options value='gameA-JUMPY'>gameA</options>`;
+				result.forEach(g => options += `<options value='${g.gameKey}-${g.word}'>${g.gameKey}</options>` )
 				document.getElementById('gameKey').innerHTML = options;
 			})
 			.catch(err => console.log('Fetch Error :', err) );
@@ -369,7 +369,7 @@
 			move += match[i] + attempt[i];
 		}
 
-		//       fetch("https://slcrbpag33.execute-api.us-west-1.amazonaws.com/prod", {
+		//       fetch('https://slcrbpag33.execute-api.us-west-1.amazonaws.com/prod', {
 		fetch(_config.api.invokeUrl, {
 			method: 'PUT',
 			headers: { Authorization: authToken },
@@ -451,7 +451,7 @@
 	 */
 	function setActive(letter, status) {
 		// use querySelectorAll to get all of the type li elements
-		const allTypes = document.querySelectorAll("div.row > button");
+		const allTypes = document.querySelectorAll('div.row > button');
 		allTypes.forEach((item) => {
 			// check to see if this is the one to make active
 			if (item.dataset.key === letter) {
@@ -469,7 +469,7 @@
 	function eliminate() {
 		let letter, attempt = '';
 		for (let i = 0; i < width; i++) {
-			letter = document.getElementById(i+"").innerText;
+			letter = document.getElementById(i+'').innerText;
 			if ( letter >= 'A' && letter <= 'Z') {
 				lock[i] = letter;
 				match[i] = 'e';
