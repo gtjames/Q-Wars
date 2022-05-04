@@ -6,29 +6,23 @@
 	let authToken;
 
 	WildRydes.authToken.then(function setAuthToken(token) {
-		if (token) 	{ authToken = token; }
-		else 		{ window.location.href = '/signin.html'; 	}
-	}).catch(function handleTokenError(error) {
-		alert(error);
-		window.location.href = '/signin.html';
-	});
-
-	// Register click handler for #request button
-	$(function onDocReady() {
-		WildRydes.authToken.then((token) => {
-			if (token) { console.log(`You are authenticated. Your token is: ${token}`); }
-
-			readWordFile(5);
-			sendInvites(['jamesga@byui.edu','gtjames@gmail.com'], 'gameA')
+		if (token) 	{
+			authToken = token;
+			console.log(`You are authenticated. Your token is: ${token}`);
 			userName = 'jamesga@byui.edu';
-			createGame('gameA');
 			gameKey = 'gameA';
-			myActiveGames();
-		});
+			readWordFile(5);				//	default to the five letter word list
+			myActiveGames();				//	load my active games
+			sendInvites(['jamesga@byui.edu','gtjames@gmail.com'], 'game1')
+			createGame('gameA');
 
-		if (!_config.api.invokeUrl) { $('#noApiMessage').show(); }
-	});
 
+
+		}
+		else {
+			window.location.href = '/signin.html';
+		}
+	}).catch(error => window.location.href = '/signin.html');
 
 	/**
 	 * 		declare all game variables
@@ -67,9 +61,6 @@
 	document.getElementById('myChallenge').addEventListener('click', () => myModal.modal());
 	// $(document).ready(() => $("#sendChallenge").click(() => $("#myModal").modal()));
 	selectWidth.addEventListener('change', loadWords);
-
-	readWordFile(5);				//	default to the five letter word list
-	myActiveGames();				//	load my active games
 
 	function loadWords(e) {
 		/**
@@ -334,7 +325,7 @@
 		}
 	}
 
-	function sendInvites() {
+	function sendInvites(friendEmails, gameKey) {
 		let newWord = selectRandomWord();
 		let body = { 'email' : friendEmails, 'gameKey' : gameKey, 'word': newWord };
 		fetch('https://slcrbpag33.execute-api.us-west-1.amazonaws.com/prod/invite', {
@@ -348,15 +339,15 @@
 	}
 
 	function getOtherMoves() {
-		fetch(`https://slcrbpag33.execute-api.us-west-1.amazonaws.com/prod?email=${userName}`)
+		fetch(`https://slcrbpag33.execute-api.us-west-1.amazonaws.com/prod?userName=${userName}`)
 			.then(resp => resp.json())
 			.then(games => {
 				games = games.data;
-				let allPlayers = games.filter(p => p.email !== userName && p.moves.length > 0);
+				let allPlayers = games.filter(p => p.userName !== userName && p.moves.length > 0);
 				competition.innerHTML = '';
 				allPlayers.forEach(player => {
 					let card = `<div class='w3-col m4 l3 disney-card w3-theme-d1'>
-									<h4>${player.email}</h4>
+									<h4>${player.userName}</h4>
 									<table>`;
 					player.moves.forEach(m => {
 						let match  = m.split('').filter((x,idx) => idx % 2 === 0);
@@ -381,14 +372,14 @@
 		fetch(_config.api.invokeUrl+'/myGames', {
 			method: 'POST',
 			headers: { Authorization: authToken },
-			body: JSON.stringify({ email : userName, userName : userName, gameKey: gameKey }),
+			body: JSON.stringify({ userName : userName, gameKey: gameKey }),
 			contentType: 'application/json',
 		}, true)
 			// .then(resp => resp.json())
 			.then(resp => resp.text())
 			.then(result => {
 				completeRequest(result);
-				console.log(_config.api.invokeUrl+`/?email=${userName}`);
+				console.log(_config.api.invokeUrl+`/myGames/?userName=${userName}`);
 				console.log(userName + ': anything? -> ' + result);
 				if (result.length === 0) return
 				result = JSON.parse(result);
@@ -400,13 +391,13 @@
 	}
 
 	function myActiveGames2(userName) {
-		fetch(_config.api.invokeUrl+`/?email=${userName}`, {
+		fetch(_config.api.invokeUrl+`/?userName=${userName}`, {
 			headers: { Authorization: authToken },
 			contentType: 'application/json',
 		})
 			.then(resp => resp.text())
 			.then(result => {
-				console.log(_config.api.invokeUrl+`/?email=${userName}`);
+				console.log(_config.api.invokeUrl+`/?userName=${userName}`);
 				console.log(userName + ': anything? -> ' + result);
 				if (result.length === 0) return
 				result = JSON.parse(result);
