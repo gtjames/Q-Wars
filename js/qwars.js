@@ -338,8 +338,9 @@
 			body: JSON.stringify({ email : userName, userName : userName, gameKey: gameKey }),
 			contentType: 'application/json',
 		})
-			.then(resp => resp.json())
-			.then((result) => completeRequest(result))
+			// .then(resp => resp.json())
+			.then(resp => resp.text())
+			.then(result => completeRequest(result))
 			.catch(err => console.log('Fetch Error :', err) );
 	}
 
