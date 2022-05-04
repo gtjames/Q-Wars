@@ -263,7 +263,10 @@
 			body: JSON.stringify({ 'userName' : userName, 'gameKey' : gameKey,})
 		})
 			.then(resp => resp.json())
-			.then(data => document.getElementById('myMoves').innerText = data.userName)
+			.then(data => {
+				let userName = data.userName.split('-')[0];
+				document.getElementById('myMoves').innerText = userName
+			})
 			.catch(err => console.log('Fetch Error :', err) );
 	}
 
@@ -312,11 +315,12 @@
 		fetch(`https://slcrbpag33.execute-api.us-west-1.amazonaws.com/prod?email=${userName}`)
 			.then(resp => resp.json())
 			.then(games => {
-				let allPlayers = games.filter(p => p.userName !== userName && p.moves.length > 0);
+				games = games.data;
+				let allPlayers = games.filter(p => p.email !== userName && p.moves.length > 0);
 				competition.innerHTML = '';
 				allPlayers.forEach(player => {
 					let card = `<div class='w3-col m4 l3 disney-card w3-theme-d1'>
-									<h4>${player.userName}</h4>
+									<h4>${player.email}</h4>
 									<table>`;
 					player.moves.forEach(m => {
 						let match  = m.split('').filter((x,idx) => idx % 2 === 0);
