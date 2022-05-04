@@ -57,7 +57,7 @@
 	document.getElementById('gameKey').addEventListener('change', newGame)
 	selectWidth.addEventListener('change', loadWords);
 	readWordFile(5);				//	default to the five letter word list
-	myActiveGames(userName);		//	load my active games
+	myActiveGames();				//	load my active games
 
 	function loadWords(e) {
 		/**
@@ -264,8 +264,8 @@
 		})
 			.then(resp => resp.json())
 			.then(data => {
-				let userName = data.userName.split('-')[0];
-				document.getElementById('myMoves').innerText = userName
+				let playerName = data.userName.split('-')[0];
+				document.getElementById('myMoves').innerText = playerName;
 			})
 			.catch(err => console.log('Fetch Error :', err) );
 	}
@@ -333,11 +333,10 @@
 			.catch(err => console.log('Fetch Error :', err) );
 	}
 
-	function myActiveGames(match, attempt) {
+	function myActiveGames() {
 		//       fetch('https://slcrbpag33.execute-api.us-west-1.amazonaws.com/prod', {
 		fetch(_config.api.invokeUrl+'/myGames', {
 			method: 'POST',
-			// mode: 'no-cors',
 			headers: { Authorization: authToken },
 			body: JSON.stringify({ email : userName, userName : userName, gameKey: gameKey }),
 			contentType: 'application/json',
@@ -360,7 +359,7 @@
 				console.log(userName + ': anything? -> ' + result);
 				if (result.length === 0) return
 				result = JSON.parse(result);
-				let options = `<option value='gameA-JUMPY'>gameA</option>`;
+				let options = `<option value='gameA-JUMPY'>gameA</option><option value='gameB-LITTLE'>gameB</option>`;
 				result.forEach(g => options += `<option value='${g.gameKey}-${g.word}'>${g.gameKey}</option>` )
 				document.getElementById('gameKey').innerHTML = options;
 			})
