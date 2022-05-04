@@ -42,6 +42,7 @@
 	let competition 	= document.getElementById('competition');
 	let selectWidth 	= document.getElementById('selectWidth');
 	let letters 		= document.getElementById('letters');
+	let myModal 		= document.getElementById('myModal');
 
 	let keyBoard 		= document.querySelectorAll('#keyboard button')
 	keyBoard.forEach(key => key.addEventListener('touch',	readKeyboard));
@@ -55,7 +56,10 @@
 	document.getElementById('reveal').addEventListener('click', reveal);
 	document.getElementById('verifyChallenge').addEventListener('click', sendChallenge);
 	document.getElementById('gameKey').addEventListener('change', newGame)
+	document.getElementById('#myChallenge').addEventListener('click', () => myModal.modal());
+	// $(document).ready(() => $("#sendChallenge").click(() => $("#myModal").modal()));
 	selectWidth.addEventListener('change', loadWords);
+
 	readWordFile(5);				//	default to the five letter word list
 	myActiveGames();				//	load my active games
 
