@@ -10,14 +10,11 @@
 			authToken = token;
 			console.log(`You are authenticated. Your token is: ${token}`);
 			userName = 'jamesga@byui.edu';
-			gameKey = 'gameA';
+			gameKey = 'gameA1';
+			createGame(gameKey);
 			readWordFile(5);				//	default to the five letter word list
 			myActiveGames();				//	load my active games
-			sendInvites(['jamesga@byui.edu','gtjames@gmail.com'], 'game1')
-			createGame('gameA');
-
-
-
+			sendInvites([userName, 'gary.jaems@unt.edu','gtjames@gmail.com'], gameKey)
 		}
 		else {
 			window.location.href = '/signin.html';
