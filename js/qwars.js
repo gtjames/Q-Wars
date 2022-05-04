@@ -337,7 +337,7 @@
 			headers: { Authorization: authToken },
 			body: JSON.stringify({ email : userName, userName : userName, gameKey: gameKey }),
 			contentType: 'application/json',
-		})
+		}, true)
 			// .then(resp => resp.json())
 			.then(resp => resp.text())
 			.then(result => completeRequest(result))
