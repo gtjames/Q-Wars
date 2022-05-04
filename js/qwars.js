@@ -356,8 +356,8 @@
 				console.log(userName + ': anything? -> ' + result);
 				if (result.length === 0) return
 				result = JSON.parse(result);
-				let options = `<options value='gameA-JUMPY'>gameA</options>`;
-				result.forEach(g => options += `<options value='${g.gameKey}-${g.word}'>${g.gameKey}</options>` )
+				let options = `<option value='gameA-JUMPY'>gameA</option>`;
+				result.forEach(g => options += `<option value='${g.gameKey}-${g.word}'>${g.gameKey}</option>` )
 				document.getElementById('gameKey').innerHTML = options;
 			})
 			.catch(err => console.log('Fetch Error :', err) );
