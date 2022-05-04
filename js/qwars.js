@@ -17,10 +17,18 @@
 	$(function onDocReady() {
 		WildRydes.authToken.then((token) => {
 			if (token) { console.log(`You are authenticated. Your token is: ${token}`); }
+
+			sendInvites(['jamesga@byui.edu','gtjames@gmail.com'], 'gameA')
+			userName = 'jamesga@byui.edu';
+			createGame('gameA')
+			gameKey = 'gameA';
+			myActiveGames();
+
 		});
 
 		if (!_config.api.invokeUrl) { $('#noApiMessage').show(); }
 	});
+
 
 	/**
 	 * 		declare all game variables
@@ -295,6 +303,9 @@
 	 *
 	 * 		called when the create game modal is dismissed
 	 */
+	userName = 'jamesga@byui.edu';
+	createGame('gameA');
+
 	function sendChallenge() {
 		let error 			= document.getElementById('gameError');
 		let challengeKey 	= document.getElementById('challengeKey');
@@ -313,17 +324,7 @@
 		if (bad.length > 0) {
 			error.innerHTML = `Please correct the poorly formed email addresses: ${bad.join(',')}`;
 		} else {
-			let newWord = selectRandomWord();
-			let body = { 'email' : friendEmails, 'gameKey' : gameKey, 'word': newWord };
-			fetch('https://slcrbpag33.execute-api.us-west-1.amazonaws.com/prod/invite', {
-				method: 'POST',
-				headers: { Authorization: authToken },
-				body: JSON.stringify(body)
-			})
-				.then(resp => resp.json())
-				.then(data => document.getElementById('myMoves').innerText = data.userName)
-				.catch(err => console.log('Fetch Error :', err) );
-
+			sendInvites(friendEmails, gameKey)
 			error.innerHTML = `Invites have been sent: ${friendEmails.join(',')}`;
 			// Set a timeout to hide the element again
 			setTimeout(() => {
@@ -334,6 +335,19 @@
 				$('#myModal').modal('toggle')
 			}, 6000);
 		}
+	}
+
+	function sendInvites() {
+		let newWord = selectRandomWord();
+		let body = { 'email' : friendEmails, 'gameKey' : gameKey, 'word': newWord };
+		fetch('https://slcrbpag33.execute-api.us-west-1.amazonaws.com/prod/invite', {
+			method: 'POST',
+			headers: { Authorization: authToken },
+			body: JSON.stringify(body)
+		})
+			.then(resp => resp.json())
+			.then(data => document.getElementById('myMoves').innerText = data.userName)
+			.catch(err => console.log('Fetch Error :', err) );
 	}
 
 	function getOtherMoves() {
