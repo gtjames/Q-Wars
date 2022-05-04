@@ -92,7 +92,6 @@
 			userName = 'jamesga@byui.edu';
 			gameKey = 'gameA1';
 			createGame(gameKey);
-			readWordFile(5);				//	default to the five letter word list
 			myActiveGames();				//	load my active games
 			sendInvites([userName, 'gary.jaems@unt.edu','gtjames@gmail.com'], gameKey)
 		}
