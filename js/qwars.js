@@ -49,7 +49,7 @@
 	document.getElementById('reveal').addEventListener('click', reveal);
 	document.getElementById('verifyChallenge').addEventListener('click', sendChallenge);
 	document.getElementById('gameKey').addEventListener('change', newGame)
-	document.getElementById('myChallenge').addEventListener('click', () => myModal.modal());
+	document.getElementById('myChallenge').addEventListener('click', () =>$("#myModal").modal());
 	// $(document).ready(() => $("#sendChallenge").click(() => $("#myModal").modal()));
 	selectWidth.addEventListener('change', loadWords);
 
@@ -87,14 +87,13 @@
 	 * 			and select the next hidden word
 	 */
 	function initializeGame() {
-		let x = true;
-		if(x) {
-			userName = 'jamesga@byui.edu';
-			gameKey = 'gameA1';
-			createGame(gameKey);
-			myActiveGames();				//	load my active games
-			sendInvites([userName, 'gary.jaems@unt.edu','gtjames@gmail.com'], gameKey)
-		}
+		userName = 'jamesga@byui.edu';
+		gameKey = 'gameA1';
+		let x = document.getElementById('0').innerText;
+		if(x === 'A')  createGame(gameKey);
+		if(x === 'B')  myActiveGames();				//	load my active games
+		if(x === 'C')  sendInvites([userName, 'gary.james@unt.edu','gtjames@gmail.com'], gameKey)
+		if(x === 'D')  getOtherMovesfetch();
 
 		hiddenWord 	= selectRandomWord();
 		guess 		= '';
