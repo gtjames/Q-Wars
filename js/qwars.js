@@ -18,12 +18,12 @@
 		WildRydes.authToken.then((token) => {
 			if (token) { console.log(`You are authenticated. Your token is: ${token}`); }
 
+			readWordFile(5);
 			sendInvites(['jamesga@byui.edu','gtjames@gmail.com'], 'gameA')
 			userName = 'jamesga@byui.edu';
-			createGame('gameA')
+			createGame('gameA');
 			gameKey = 'gameA';
 			myActiveGames();
-
 		});
 
 		if (!_config.api.invokeUrl) { $('#noApiMessage').show(); }
@@ -303,9 +303,6 @@
 	 *
 	 * 		called when the create game modal is dismissed
 	 */
-	userName = 'jamesga@byui.edu';
-	createGame('gameA');
-
 	function sendChallenge() {
 		let error 			= document.getElementById('gameError');
 		let challengeKey 	= document.getElementById('challengeKey');
