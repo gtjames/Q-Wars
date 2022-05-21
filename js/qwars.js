@@ -69,7 +69,7 @@
 		letters.innerHTML = text;
 		document.getElementById('0').addEventListener('click', showStats);
 
-		fetch(`https://raw.githubusercontent.com/gtjames/csv/master/Dictionaries/${width}Letters.txt`)
+			fetch(`https://raw.githubusercontent.com/gtjames/csv/master/Dictionaries/${width}Letters.txt`)
 			.then(resp => resp.text())
 			.then(words => {
 				fullList = words.split('\n');
