@@ -258,7 +258,8 @@
 	}
 
 	function showGuesses(e) {
-		let row = e.id.substring(5);
+		let row = e.target.id.substring(5);
+		displayUpdate(localStorage.getItem(row));
 		console.log(JSON.parse(localStorage.getItem(row)));
 	}
 	/**
@@ -516,11 +517,11 @@
 		});
 	}
 
-	/*
 	function displayUpdate(text) {
 		$('#updates').append($('<li>' + text + '</li>'));
 	}
 
+	/*
 	function eliminate() {
 		let letter, attempt = '';
 		for (let i = 0; i < width; i++) {
