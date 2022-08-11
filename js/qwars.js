@@ -35,7 +35,7 @@
 	let competition 	= document.getElementById('competition');
 	let selectWidth 	= document.getElementById('selectWidth');
 	let letters 		= document.getElementById('letters');
-	let myModal 		= document.getElementById('myModal');
+	// let myModal 		= document.getElementById('myModal');
 
 	let keyBoard 		= document.querySelectorAll('#keyboard button')
 	keyBoard.forEach(key => key.addEventListener('touch',	readKeyboard));
@@ -55,13 +55,14 @@
 
 	function loadWords(e) {
 		/**
-		 * 		read the list of five letter words
+		 * 		read the list of five-letter words
 		 */
-		readWordFile(+e.target.value);				//	force width to be a number.
+		readWordFile(e.target.value);				//	force width to be a number.
 	}
 
 	function readWordFile(wordSize) {
-		width = wordSize;
+		width = wordSize === 'w' ? 5 : +wordSize;
+
 		let text = '';
 		for (let l = 0; l < width; l++) {
 			text += `<td><button id='${l}' class='guess oneLetter'></button></td>`;
@@ -69,7 +70,7 @@
 		letters.innerHTML = text;
 		document.getElementById('0').addEventListener('click', showStats);
 
-			fetch(`https://raw.githubusercontent.com/gtjames/csv/master/Dictionaries/${width}Letters.txt`)
+			fetch(`https://raw.githubusercontent.com/gtjames/csv/master/Dictionaries/${wordSize}Letters.txt`)
 			.then(resp => resp.text())
 			.then(words => {
 				fullList = words.split('\n');
@@ -78,7 +79,8 @@
 	}
 
 	function validateEmail(email) {
-		return email.match(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/);
+		return email.match(/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/);
+		// return email.match(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/);
 	}
 
 	/**
@@ -265,7 +267,7 @@
 		for (let h = 0; h < width; h++) {
 			button += `<button class='${match[h]} oneLetter'>${userGuess[h]}</button>`;
 		}
-		return `<div class='row'>${button}<button class='x margin'>${howMany}</button></div>`;
+		return `<div class='row' data-row='${numOfTries}'>${button}<button class='x margin'>${howMany}</button></div>`;
 	}
 
 	/**
@@ -485,6 +487,7 @@
 		}
 		tryThis.innerHTML = text;
 		possibleWords.innerHTML = `Possibles ${possibles.length}<br>`;
+		localStorage.setItem(numOfTries, JSON.stringify(possibleWords))
 		return possibles.length;
 	}
 
