@@ -22,6 +22,7 @@
 	 */
 
 	let fullList, hiddenWord, unused, close, lock, guess, width, gameOver;
+	let apiGateway = 'https://slcrbpag33.execute-api.us-west-1.amazonaws.com/prod';
 
 	let gameKey = 'gameA';
 	let userName 		= localStorage.getItem('userName');
@@ -238,7 +239,9 @@
 
 		//	let's see what words match our hits and misses so far
 		let howMany = findPossibles(lock);
-		userAttempts.innerHTML += postAttempt(match, guess, howMany)
+		userAttempts.innerHTML += postAttempt(match, guess, howMany);
+		const listOfWords = document.getElementById(`guess${numOfTries}`);
+		listOfWords.addEventListener('click', showGuesses);
 		makeAMove(match, guess);
 		const guesses = document.querySelectorAll('.guess');
 		guesses.forEach(spot => spot.innerText = '');
@@ -254,6 +257,10 @@
 		error.innerHTML = stats;
 	}
 
+	function showGuesses(e) {
+		let row = e.id.substring(5);
+		console.log(JSON.parse(localStorage.getItem(row)));
+	}
 	/**
 	 * 		postAttempt
 	 * 			Add this attempt to the list of guessed words
@@ -267,7 +274,7 @@
 		for (let h = 0; h < width; h++) {
 			button += `<button class='${match[h]} oneLetter'>${userGuess[h]}</button>`;
 		}
-		return `<div class='row' data-row='${numOfTries}'>${button}<button class='x margin'>${howMany}</button></div>`;
+		return `<div class='row' id='guess'${numOfTries} data-row='${numOfTries}'>${button}<button class='x margin'>${howMany}</button></div>`;
 	}
 
 	/**
@@ -276,7 +283,7 @@
 	 * @param gameKey
 	 */
 	function createGame(gameKey) {
-		fetch('https://slcrbpag33.execute-api.us-west-1.amazonaws.com/prod', {
+		fetch(apiGateway, {
 			method: 'POST',
 			headers: { Authorization: authToken },
 			body: JSON.stringify({ 'userName' : userName, 'gameKey' : gameKey})
@@ -330,7 +337,7 @@
 	function sendInvites(friendEmails, gameKey) {
 		let newWord = selectRandomWord();
 		let body = { 'email' : friendEmails, 'gameKey' : gameKey, 'word': newWord };
-		fetch('https://slcrbpag33.execute-api.us-west-1.amazonaws.com/prod/invite', {
+		fetch(apiGateway + '/invite', {
 			method: 'POST',
 			headers: { Authorization: authToken },
 			body: JSON.stringify(body)
@@ -370,7 +377,7 @@
 	 * 		called at page load
 	 */
 	function myActiveGames() {
-		//       fetch('https://slcrbpag33.execute-api.us-west-1.amazonaws.com/prod', {
+		//       fetch(apiGateway, {
 		fetch(_config.api.invokeUrl+'/myGames', {
 			method: 'POST',
 			headers: { Authorization: authToken },
@@ -416,7 +423,7 @@
 			move += match[i] + attempt[i];
 		}
 
-		//       fetch('https://slcrbpag33.execute-api.us-west-1.amazonaws.com/prod', {
+		//       fetch(apiGateway, {
 		fetch(_config.api.invokeUrl, {
 			method: 'PUT',
 			headers: { Authorization: authToken },
@@ -487,7 +494,7 @@
 		}
 		tryThis.innerHTML = text;
 		possibleWords.innerHTML = `Possibles ${possibles.length}<br>`;
-		localStorage.setItem(numOfTries, JSON.stringify(possibleWords))
+		localStorage.setItem(numOfTries, JSON.stringify(possibles))
 		return possibles.length;
 	}
 
