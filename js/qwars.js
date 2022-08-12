@@ -42,6 +42,7 @@
 	keyBoard.forEach(key => key.addEventListener('touch',	readKeyboard));
 	keyBoard.forEach(key => key.addEventListener('click',	readKeyboard));
 	window.addEventListener						('keydown',	readKeypress);
+	userAttempts.addEventListener('click', showGuesses);
 
 	/**
 	 * 		add event listeners for keystroke and search events
@@ -241,7 +242,6 @@
 		let howMany = findPossibles(lock);
 		userAttempts.innerHTML += postAttempt(match, guess, howMany);
 		const listOfWords = document.getElementById(`guess${numOfTries}`);
-		listOfWords.addEventListener('click', showGuesses);
 		makeAMove(match, guess);
 		const guesses = document.querySelectorAll('.guess');
 		guesses.forEach(spot => spot.innerText = '');
