@@ -42,7 +42,7 @@
 	keyBoard.forEach(key => key.addEventListener('touch',	readKeyboard));
 	keyBoard.forEach(key => key.addEventListener('click',	readKeyboard));
 	window.addEventListener						('keydown',	readKeypress);
-	userAttempts.addEventListener('click', showGuesses);
+	userAttempts.addEventListener				('click', 	showGuesses);
 
 	/**
 	 * 		add event listeners for keystroke and search events
@@ -258,7 +258,8 @@
 	}
 
 	function showGuesses(e) {
-		let row = e.target.id.substring(5);
+		let row = e.target.parentElement.id.substring(5);
+		if (row === null)		return;
 		displayUpdate(localStorage.getItem(row));
 		console.log(JSON.parse(localStorage.getItem(row)));
 	}
