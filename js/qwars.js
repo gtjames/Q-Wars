@@ -121,6 +121,8 @@
 		const guesses = document.querySelectorAll('.guess');
 		guesses.forEach(spot => spot.innerText = '');
 		guesses.forEach(spot => spot.classList.remove('round'));
+		$('#updates').empty();
+		['1','2','3','4','5','6','7','8','9'].forEach(n => localStorage.removeItem(n))
 	}
 
 	function reveal() {
@@ -241,7 +243,6 @@
 		//	let's see what words match our hits and misses so far
 		let howMany = findPossibles(lock);
 		userAttempts.innerHTML += postAttempt(match, guess, howMany);
-		const listOfWords = document.getElementById(`guess${numOfTries}`);
 		makeAMove(match, guess);
 		const guesses = document.querySelectorAll('.guess');
 		guesses.forEach(spot => spot.innerText = '');
@@ -258,7 +259,7 @@
 	}
 
 	function showGuesses(e) {
-		let row = e.target.parentElement.id.substring(5);
+		let row = e.target.id.substring(5);
 		if (row === null)		return;
 		displayUpdate(localStorage.getItem(row));
 		console.log(JSON.parse(localStorage.getItem(row)));
@@ -276,7 +277,7 @@
 		for (let h = 0; h < width; h++) {
 			button += `<button class='${match[h]} oneLetter'>${userGuess[h]}</button>`;
 		}
-		return `<div class='row' id='guess${numOfTries}' data-row='${numOfTries}'>${button}<button class='x margin'>${howMany}</button></div>`;
+		return `<div class='row'>${button}<button id='guess${numOfTries}' class='x margin'>${howMany}</button></div>`;
 	}
 
 	/**
@@ -494,7 +495,7 @@
 		for (let w of possibles) {
 			text += `<li>${w}</li>`;
 		}
-		tryThis.innerHTML = text;
+		// tryThis.innerHTML = text;
 		possibleWords.innerHTML = `Possibles ${possibles.length}<br>`;
 		localStorage.setItem(numOfTries, JSON.stringify(possibles))
 		return possibles.length;
