@@ -30,7 +30,6 @@
 	let numOfTries = 0;
 
 	let userAttempts 	= document.getElementById('userAttempts');
-	let possibleWords 	= document.getElementById('possibleWords');
 	let error 			= document.getElementById('error');
 	let tryThis 		= document.getElementById('tryThis');
 	let competition 	= document.getElementById('competition');
@@ -54,12 +53,14 @@
 	document.getElementById('myChallenge').addEventListener('click', () =>$("#myModal").modal());
 	// $(document).ready(() => $("#sendChallenge").click(() => $("#myModal").modal()));
 	selectWidth.addEventListener('change', loadWords);
+	selectWidth.addEventListener('doubleclick', () => selectWidth.disabled = false);
 
 	function loadWords(e) {
 		/**
 		 * 		read the list of five-letter words
 		 */
 		readWordFile(e.target.value);				//	force width to be a number.
+		selectWidth.disabled = true;
 	}
 
 	function readWordFile(wordSize) {
@@ -114,7 +115,6 @@
 
 		error.innerText 		= '';
 		userAttempts.innerHTML 	= '';
-		possibleWords.innerHTML = '';
 		tryThis.innerHTML 		= '';
 		const allKeys = document.querySelectorAll('div.row > button');
 		allKeys.forEach(key => key.className = '');
@@ -496,7 +496,6 @@
 			text += `<li>${w}</li>`;
 		}
 		// tryThis.innerHTML = text;
-		possibleWords.innerHTML = `Possibles ${possibles.length}<br>`;
 		localStorage.setItem(numOfTries, JSON.stringify(possibles))
 		return possibles.length;
 	}
