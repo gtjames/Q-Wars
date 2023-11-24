@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport"
+		  content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Words</title>
+</head>
+<body>
+<label for="letter">How longr</label>
+<input type="text" id="letter">
+<button id="getWords">Get Words</button>
+
+<textarea id="words" cols="30" rows="10"></textarea>
+</body>
+<script>
+	document.getElementById('getWords').addEventListener('click', getWords);
+
+	function getWords() {
+		let letter = document.getElementById('letter').value;
+		var xhttp = new XMLHttpRequest();
+		xhttp.onreadystatechange = function() {
+			if (this.readyState == 4 && this.status == 200) {
+				let text = '';
+				let json = JSON.parse(this.responseText, "text/json");
+				json.forEach(w => {
+					text += w.word + ",";
+				})
+				document.getElementById("words").innerText = text;
+			}
+		};
+		xhttp.open("GET", `https://www.wordgamedictionary.com/word-lists/${letter}-letter-words/${letter}-letter-words.json`, true);
+		xhttp.send();
+		console.log(letter)
+	}
+
+	function makeUser() {
+		return {
+			name: "John",
+			ref: this
+		};
+	}
+
+	let user = makeUser();
+
+	alert( user.ref.name ); // What's the result?
+</script>
+</html>
+
+

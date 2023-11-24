@@ -28,6 +28,7 @@
 	let userName 		= localStorage.getItem('userName');
 	let timerId = -1;
 	let numOfTries = 0;
+	let wordl;			//	is the chosen word file for wordl words
 
 	let userAttempts 	= document.getElementById('userAttempts');
 	let error 			= document.getElementById('error');
@@ -35,6 +36,7 @@
 	let competition 	= document.getElementById('competition');
 	let selectWidth 	= document.getElementById('selectWidth');
 	let letters 		= document.getElementById('letters');
+	let newWidth 		= document.getElementById('newWidth');
 	// let myModal 		= document.getElementById('myModal');
 
 	let keyBoard 		= document.querySelectorAll('#keyboard button')
@@ -53,18 +55,21 @@
 	document.getElementById('myChallenge').addEventListener('click', () =>$("#myModal").modal());
 	// $(document).ready(() => $("#sendChallenge").click(() => $("#myModal").modal()));
 	selectWidth.addEventListener('change', loadWords);
-	selectWidth.addEventListener('doubleclick', () => selectWidth.disabled = false);
+	newWidth.addEventListener('click', (e) => selectWidth.style.visibility = '');
 
 	function loadWords(e) {
 		/**
 		 * 		read the list of five-letter words
 		 */
+		console.log(e.target.value);
 		readWordFile(e.target.value);				//	force width to be a number.
-		selectWidth.disabled = true;
+		selectWidth.setAttribute("disabled", "true");
+		// document.getElementById('customMessageTextArea').removeAttribute("disabled");
+		// document.getElementById('customMessageTextArea').focus();
 	}
 
 	function readWordFile(wordSize) {
-		width = wordSize === 'w' ? 5 : +wordSize;
+		width = (wordSize === 'w' || wordSize === "0") ? 5 : +wordSize;
 
 		let text = '';
 		for (let l = 0; l < width; l++) {
@@ -73,12 +78,19 @@
 		letters.innerHTML = text;
 		document.getElementById('0').addEventListener('click', showStats);
 
-			fetch(`https://raw.githubusercontent.com/gtjames/csv/master/Dictionaries/${wordSize}Letters.txt`)
-			.then(resp => resp.text())
-			.then(words => {
-				fullList = words.split('\n');
+		wordl = wordSize === 'w' || wordSize === "0";
+		wordSize = (wordSize === 'w' || wordSize === "0") ? 'w' : wordSize;
+		fetch(`https://raw.githubusercontent.com/gtjames/csv/master/Dictionaries/${wordSize}Letters.txt`)
+		.then(resp => resp.text())
+		.then(words => {
+			fullList = words.split('\n');
+			if (document.querySelector("#user").value.length == 5) {
+				hiddenWord = document.querySelector("#user").value;
+				genericInit();
+			} else {
 				initializeGame();
-			});
+			}
+		});
 	}
 
 	function validateEmail(email) {
@@ -93,7 +105,7 @@
 	 */
 	function initializeGame() {
 		userName = 'jamesga@byui.edu';
-		gameKey = 'gameA1';
+		gameKey = 'gameA1';  
 		let x = document.getElementById('0').innerText;
 		if(x === 'A')  createGame(gameKey);
 		if(x === 'B')  myActiveGames();				//	load my active games
@@ -102,6 +114,10 @@
 		if(x === 'E')  makeAMove(['_','_','_','_','_'],['S','M','A','R','T']);
 
 		hiddenWord 	= selectRandomWord();
+		genericInit();
+	}
+
+	function genericInit() {
 		guess 		= '';
 		unused 		= new Set();
 		lock  		= '_'.repeat(width).split('');
@@ -253,7 +269,7 @@
 	function showStats() {
 		let stats;
 		stats  = '(un) ' + [...unused];
-		stats += '<br>(cl) ' + close.map(c => Array.from(c)).join('|')
+		stats += '<br>(cl) ' + close.map(c => (c.size>0) ? Array.from(c):'_').join('|')
 		stats += '<br>(lk) ' + lock.join('|');
 		error.innerHTML = stats;
 	}
@@ -346,7 +362,9 @@
 			body: JSON.stringify(body)
 		})
 			.then(resp => resp.json())
-			.then(data => document.getElementById('myMoves').innerText = data.userName)
+			.then(data => data => {
+				document.getElementById('myMoves').innerText = data.userName;
+			})
 			.catch(err => console.log('Fetch Error :', err) );
 	}
 
@@ -425,7 +443,7 @@
 		for(let i = 0; i < width; i++) {
 			move += match[i] + attempt[i];
 		}
-
+		if (1===1) return;
 		//       fetch(apiGateway, {
 		fetch(_config.api.invokeUrl, {
 			method: 'PUT',
@@ -447,7 +465,15 @@
 	 * @returns {*}
 	 */
 	function selectRandomWord() {
-		return fullList[Math.floor(Math.random() * fullList.length)];
+		if (wordl) {
+			let today = new Date();
+			let date1 = new Date("10/16/2017");
+			let diffDays = ((today - date1) / (1000 * 60 * 60 * 24)) | 0;
+			return fullList[diffDays];
+		}
+		else {
+			return fullList[Math.floor(Math.random() * fullList.length)];
+		}
 	}
 
 	/**

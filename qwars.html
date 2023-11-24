@@ -20,10 +20,10 @@
             }
 
         .margin {margin-left: 15px;}
-        .x {background-color: gold; color: black;}
-        .e {background-color: green;}
-        .c {background-color: palegoldenrod; color: black;}
-        ._ {background-color: gray;}
+        .x {background-color: gold; transform: scale(1);  color: black;}
+        .e {background-color: green; transform: scale(1); border-radius: 25px;}
+        .c {background-color: palegoldenrod; transform: scale(1);  color: black;}
+        ._ {background-color: gray; transform: scale(1);}
         .nope {background-color: black; color: red;}
         .round  { border-radius: 12px;}
         td {
@@ -87,6 +87,7 @@
         <a class="dropdown-item" href="#">Action</a>
         <a id="myChallenge" href="#">Create a Challenge</a>
         <button type="button" class="btn btn-default btn-lg" id="sendChallenge">Create a Challenge</button>
+        <button type="button" class="btn btn-default btn-lg" id="newWidth">Change Width</button>
     </div>
 </div>
 <div class="panel-body"><ol id="updates"></ol></div>
@@ -101,8 +102,10 @@
             <td><button id="playAgain">Play Again?</button></td>
             <td><button id="newUser">Search</button></td>
             <td><label  id="reveal" for="selectWidth">Width</label>
+                <input  id="user" type="text">
                 <select name="selectWidth" id="selectWidth">
                     <option value="5">Chose a Word Length</option>
+                    <option value="0">User</option>
                     <option value="2">Two</option>
                     <option value="3">Three</option>
                     <option value="4">Four</option>
@@ -114,14 +117,14 @@
         </tr>
     </table>
     <hr>
-    <table><tr id="letters"></tr></table>
-    <hr>
     <div class="card moves">
         <h4 id="myMoves" class="card-title"></h4>
         <div class="card-body">
             <div id="userAttempts" class="keyboard"></div>
         </div>
     </div>
+    <table><tr id="letters"></tr></table>
+    <hr>
     <div id="error"></div>
     <div id="competition"></div>
     <div id="keyboard">
